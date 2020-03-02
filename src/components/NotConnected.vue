@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="padding-top: 15px">
+  <div class="container-fluid" style="padding: 40px">
     <div class="row">
       <div class="col-lg">
         <Home/>
@@ -9,6 +9,11 @@
       </div>
       <div class="col-lg">
         <ConnectionForm/>
+      </div>
+    </div>
+    <div class="row" style="padding: 40px">
+      <div class="col-lg text-center">
+        <img src="../assets/start_wolf.png" />
       </div>
     </div>
   </div>
