@@ -8,7 +8,7 @@
         <div class="verticalBar"></div>
       </div>
       <div class="col-lg">
-        <ConnectionForm/>
+        <ConnectionForm v-model="connected" @update="connect"/>
       </div>
     </div>
     <div class="row" style="padding: 40px">
@@ -26,28 +26,22 @@
   export default {
     name: 'NotConnected',
     props: {
-      msg: String
+      connected: Boolean
     },
     components: {
       ConnectionForm,
       Home
+    },
+    methods: {
+      connect: function(value) {
+        this.$emit('update', value)
+      }
     }
   }
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .home {
-    position: absolute;
-
-  }
-
-  .connectionForm {
-    position: absolute;
-    left: 52%;
-  }
-
   .verticalBar {
     border-left: 1px solid white;
     height: 94%;

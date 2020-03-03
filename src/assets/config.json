@@ -1,0 +1,12 @@
+{
+  "ribbon": {
+    "githubProfile": "https://github.com/Dadard29",
+    "linkedinProfile": "https://www.linkedin.com/in/florian-charpentier/",
+    "gitlabProfile": "https://gitlab.com/dadard",
+    "reportIssue": "https://github.com/Dadard29/go-core/issues"
+  },
+  "jwt": {
+    "tokenKey": "session_token"
+  },
+  "apiHost": "http://localhost:8080"
+}
