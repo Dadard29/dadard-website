@@ -1,6 +1,7 @@
 <template>
     <div>
         salut, moi c router
+        <router-view></router-view>
     </div>
 </template>
 

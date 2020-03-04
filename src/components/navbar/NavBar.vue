@@ -5,9 +5,9 @@
             Dadard Website
         </a>
         <div class="navbar-nav">
-            <a class="nav-item nav-link" >Dashboard</a>
-            <a class="nav-item nav-link" >Profile</a>
-            <a class="nav-item nav-link" >Catalog</a>
+            <router-link to="/dashboard" class="nav-item nav-link" >Dashboard</router-link>
+            <router-link to="/profile" class="nav-item nav-link" >Profile</router-link>
+            <router-link to="/catalog">Catalog</router-link>
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Interfacesl
@@ -25,9 +25,11 @@
 
 <script>
     import Profile from "../../models/profile";
+    import Router from "../router/Router";
 
     export default {
         name: "NavBar",
+        components: {Router},
         data: function() {
             return {}
         },
