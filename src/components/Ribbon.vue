@@ -38,7 +38,7 @@
 </template>
 
 <script>
-    // import Logger from "@/components/logger/logger.vue";
+    // import Logger from "@/components/logger/Logger.vue";
     import LoggerService from "@/models/logger";
     const axios = require('axios').default;
     const config = require('../assets/config.json');

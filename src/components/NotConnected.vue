@@ -8,7 +8,7 @@
         <div class="verticalBar"></div>
       </div>
       <div class="col-lg">
-        <ConnectionForm v-model="connected" @update="connect"/>
+        <ConnectionForm @connect="connect"/>
       </div>
     </div>
 <!--    <div class="row" style="padding: 40px">-->
@@ -34,7 +34,7 @@
     },
     methods: {
       connect: function(value) {
-        this.$emit('update', value)
+        this.$emit('connect', value)
       }
     }
   }

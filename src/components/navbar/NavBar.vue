@@ -10,25 +10,29 @@
             <a class="nav-item nav-link" >Catalog</a>
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    APIs User Interface
+                    Interfacesl
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" >Youtube Download</a>
                 </div>
             </div>
         </div>
-        Logged as {{this.username}}
+        <div>
+            Logged as {{this.profile.Username}}
+        </div>
     </nav>
 </template>
 
 <script>
+    import Profile from "../../models/profile";
+
     export default {
         name: "NavBar",
         data: function() {
             return {}
         },
         props: {
-            username: String
+            profile: Profile
         }
     }
 </script>

@@ -33,7 +33,7 @@
 
 <script>
     import LoggerService from "../../models/logger";
-    import Logger from "@/components/logger/logger.vue";
+    import Logger from "@/components/logger/Logger.vue";
 
     const axios = require('axios').default;
     const config = require("../../assets/config.json");
@@ -45,17 +45,20 @@
         },
         data: function () {
           return {
+              service: null,
               logger: null,
               username: null,
               password: null,
-              apiUrl: `${config.apiHost}/profile/auth/jwt`
+              apiUrl: config.apiHost,
+              jwtRoute: "/profile/auth/jwt",
+              profileRoute: "/profile/auth"
           }
-        },
-        props: {
-          connected: Boolean
         },
         created: function() {
             this.logger = new LoggerService();
+            this.service = axios.create({
+                baseURL: this.apiUrl,
+            });
             this.checkConnected()
         },
         methods: {
@@ -64,33 +67,38 @@
                 let token = localStorage.getItem(config.jwt.tokenKey);
                 if (token == null) {
                     self.logger.debug("no token found in storage");
-                    self.connected = false;
                     return;
                 }
 
-                axios.get(this.apiUrl).then(function(response) {
-                    let jwtValidity = response.status === 200 && response.data.Status === true;
-                    let message;
-                    if (jwtValidity) {
-                        message = "jwt is valid"
-                    } else {
-                        message = "jwt is not valid"
+                let reqConfig = {
+                    headers: {
+                        Authorization: token
                     }
-                    self.logger.debug(message);
-                    self.connected = jwtValidity
+                };
+
+                this.service.get(this.jwtRoute, reqConfig).then(function(response) {
+                    let jwtValidity = response.status === 200 && response.data.Status === true;
+                    if (jwtValidity) {
+                        self.logger.debug("token is valid");
+                        // in that case, trigger the profile retrieve
+                        self.getProfileAndConnect(token);
+                    } else {
+                        self.logger.debug("token is invalid");
+                    }
                 })
                     .catch(function(error) {
                         self.logger.error(error.response.data.Message);
                     });
             },
             logIn: function () {
+                // get a new jwt from basic auth
                 if (!this.username || !this.password) {
                     this.logger.error("empty entry");
                     return
                 }
 
                 let self = this;
-                axios.post(this.apiUrl, {}, {
+                this.service.post(this.jwtRoute, {}, {
                     auth: {
                         username: self.username,
                         password: self.password
@@ -102,7 +110,8 @@
                                self.logger.warning(msg);
                            }
                         } else {
-                            self.$emit('update', true)
+                            let jwt = response.data.Content;
+                            self.getProfileAndConnect(jwt);
                         }
                     }).catch(function(error) {
                         if (error.response) {
@@ -118,6 +127,37 @@
                 if (this.username == null || this.password == null) {
                     this.logger.error("empty entry");
                 }
+            },
+            getProfileAndConnect(jwt) {
+                // retrieve the profile from the JWT and trigger connect
+                let reqConfig = {
+                    headers: {
+                        Authorization: jwt
+                    }
+                };
+
+                let self = this;
+                this.service.get(this.profileRoute, reqConfig)
+                    .then(function(response) {
+                        if (response.status !== 200) {
+                            let msg = response.data.Message;
+                            if (msg) {
+                                self.logger.warning(msg);
+                            }
+                        } else {
+                            // the profile has been retrieved
+                            let profile = response.data.Content;
+                            localStorage.setItem(config.jwt.tokenKey, jwt);
+                            self.$emit('connect', profile);
+                        }
+                    })
+                    .catch(function(error) {
+                        if (error.response) {
+                            self.logger.error(error.response.data.Message);
+                        } else {
+                            self.logger.error(error);
+                        }
+                    });
             }
         }
     }

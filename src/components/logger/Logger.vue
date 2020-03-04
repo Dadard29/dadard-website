@@ -28,7 +28,6 @@
         background: rgba(0, 0, 0, 0.7);
         z-index: 1;
         width: 100%;
-        /*max-height: 140px;*/
         height: 140px;
         overflow: auto;
     }
