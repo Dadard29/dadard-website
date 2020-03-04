@@ -3,7 +3,14 @@
         <div v-if="retrieved">
             <div class="row align-items-end">
                 <div class="col-lg text-left">
-
+                    <div class="row align-items-end">
+                        <div class="col- text-left">
+                            <img src="../assets/eddardStartPortrait.png" style="height: 50px">
+                        </div>
+                        <div class="col-lg text-left">
+                            <i>"{{getQuote()}}"</i>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg text-center">
                     <div style="padding-bottom: 10px">
@@ -16,8 +23,10 @@
                     </div>
                 </div>
                 <div class="col-lg text-right">
-                    <span class="badge badge-light">Website Version {{version}}</span> -
-                    <span class="badge badge-light">API Version {{infos.Version}}</span> -
+                    Website Version {{version}} -
+                    API Version {{infos.Version}} -
+<!--                    <span class="badge badge-light">Website Version {{version}}</span> - -->
+<!--                    <span class="badge badge-light">API Version {{infos.Version}}</span> - -->
                     <a style="padding: 5px" :href="ribbonLinks.reportIssue" target="_blank" >Report an issue</a>
                 </div>
             </div>
@@ -43,7 +52,8 @@
                 infos: null,
                 apiUrl: `${config.apiHost}/infos`,
                 retrieved: false,
-                ribbonLinks: config.ribbon
+                ribbonLinks: config.ribbon,
+                quotes: config.ribbon.eddardStarkQuotes
             }
         },
         created: function () {
@@ -55,6 +65,7 @@
                 let self = this;
                 axios.get(this.apiUrl)
                     .then(function(response) {
+                        self.logger.debug("ribbon infos retrieved");
                         self.infos = response.data;
                         self.retrieved = true
                     })
@@ -64,6 +75,10 @@
 
                 let mainConfig = require("../../package.json");
                 self.version = mainConfig.version
+            },
+            getQuote: function() {
+                let quoteIndex = Math.floor(Math.random() * this.quotes.length);
+                return this.quotes[quoteIndex];
             }
         }
     }
@@ -72,7 +87,7 @@
 
 <style scoped>
     .ribbon {
-        position: absolute;
+        position: fixed;
         bottom: 10px;
     }
 </style>

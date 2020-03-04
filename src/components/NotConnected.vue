@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="padding: 40px">
+  <div class="container-fluid not-connected" style="padding: 40px">
     <div class="row">
       <div class="col-lg">
         <Home/>
@@ -11,11 +11,11 @@
         <ConnectionForm v-model="connected" @update="connect"/>
       </div>
     </div>
-    <div class="row" style="padding: 40px">
-      <div class="col-lg text-center">
-        <img src="../assets/start_wolf.png" />
-      </div>
-    </div>
+<!--    <div class="row" style="padding: 40px">-->
+<!--      <div class="col-lg text-center">-->
+<!--        <img class="wolf" src="../assets/start_wolf.png" />-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -45,6 +45,15 @@
   .verticalBar {
     border-left: 1px solid white;
     height: 94%;
+  }
+
+  .not-connected {
+    /*background-image: url("../assets/start_wolf.png");*/
+    /*background-repeat: no-repeat;*/
+    /*background-attachment: fixed;*/
+    /*background-position: bottom;*/
+    position: absolute;
+    height: 100%;
   }
 
 </style>

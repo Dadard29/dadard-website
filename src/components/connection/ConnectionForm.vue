@@ -4,33 +4,50 @@
         <form class="form">
             <div class="form-group">
                 <label for="usernameInput">Username</label>
-                <input v-model="username" type="text" class="form-control" id="usernameInput" placeholder="Enter username" required>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text custom-input-prepend">@</div>
+                    </div>
+                    <input v-model="username" type="text" class="form-control custom-input" id="usernameInput" placeholder="Enter username" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="passwordInput">Password</label>
-                <input v-model="password" type="password" class="form-control" id="passwordInput" placeholder="Enter password" required>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text custom-input-prepend">#</div>
+                    </div>
+                    <input v-model="password" type="password" class="form-control custom-input" id="passwordInput" placeholder="Enter password" required>
+                </div>
             </div>
             <div class="btn-group" role="group">
                 <button v-on:click="signUp" type="button" class="btn btn-outline-primary">Sign up</button>
                 <button v-on:click="logIn" type="button" class="btn btn-outline-primary">Log in</button>
             </div>
-            <span style="color: red; padding-left: 30px">{{errorStatus}}</span>
         </form>
+        <div>
+            <Logger :logger-service="logger" />
+        </div>
     </div>
 </template>
 
 <script>
+    import LoggerService from "../../models/logger";
+    import Logger from "@/components/logger/logger.vue";
+
     const axios = require('axios').default;
     const config = require("../../assets/config.json");
 
     export default {
         name: "ConnectionForm",
+        components: {
+          Logger
+        },
         data: function () {
           return {
               logger: null,
               username: null,
               password: null,
-              errorStatus: null,
               apiUrl: `${config.apiHost}/profile/auth/jwt`
           }
         },
@@ -38,6 +55,7 @@
           connected: Boolean
         },
         created: function() {
+            this.logger = new LoggerService();
             this.checkConnected()
         },
         methods: {
@@ -45,7 +63,7 @@
                 let self = this;
                 let token = localStorage.getItem(config.jwt.tokenKey);
                 if (token == null) {
-                    console.log("no token found in storage");
+                    self.logger.debug("no token found in storage");
                     self.connected = false;
                     return;
                 }
@@ -58,16 +76,16 @@
                     } else {
                         message = "jwt is not valid"
                     }
-                    console.log(message);
+                    self.logger.debug(message);
                     self.connected = jwtValidity
                 })
                     .catch(function(error) {
-                        console.log(error)
+                        self.logger.error(error.response.data.Message);
                     });
             },
             logIn: function () {
-                if (this.username == null || this.password == null) {
-                    this.errorStatus = "empty entry";
+                if (!this.username || !this.password) {
+                    this.logger.error("empty entry");
                     return
                 }
 
@@ -78,24 +96,27 @@
                         password: self.password
                     }})
                     .then(function(response) {
-                        console.log(response);
                         if (response.status !== 200) {
                            let msg = response.data.Message;
                            if (msg) {
-                               self.errorStatus = msg
+                               self.logger.warning(msg);
                            }
                         } else {
                             self.$emit('update', true)
                         }
                     }).catch(function(error) {
-                        console.log(error);
-                        self.errorStatus = error.response.data.Message;
+                        if (error.response) {
+                            self.logger.error(error.response.data.Message);
+                        } else {
+                            self.logger.error(error);
+                        }
+
                 });
 
             },
             signUp: function () {
                 if (this.username == null || this.password == null) {
-                    this.errorStatus = "empty entry"
+                    this.logger.error("empty entry");
                 }
             }
         }
@@ -105,6 +126,14 @@
 <style scoped>
     .form {
         padding-left: 60px;
+    }
 
+    .custom-input {
+        background-color: black;
+        color: inherit;
+    }
+
+    .custom-input-prepend {
+        border: solid 1px white;
     }
 </style>

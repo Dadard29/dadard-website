@@ -3,7 +3,14 @@
     "githubProfile": "https://github.com/Dadard29",
     "linkedinProfile": "https://www.linkedin.com/in/florian-charpentier/",
     "gitlabProfile": "https://gitlab.com/dadard",
-    "reportIssue": "https://github.com/Dadard29/go-core/issues"
+    "reportIssue": "https://github.com/Dadard29/go-core/issues",
+    "eddardStarkQuotes": [
+      "When the snows fall and the white winds blow, the lone wolf dies, but the pack survives",
+      "Know the men who follow you and let them know you. Don't ask your men to die for a stranger",
+      "Black and white and grey, all the shades of truth",
+      "In this world only winter is certain",
+      "You never could lie for love nor honor, Ned Stark"
+    ]
   },
   "jwt": {
     "tokenKey": "session_token"
