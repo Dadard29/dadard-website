@@ -17,9 +17,6 @@ import Ribbon from "@/components/Ribbon";
 import Router from "@/components/router/Router";
 import NavBar from "@/components/navbar/NavBar";
 
-const config = require('./assets/config.json');
-const axios = require('axios').default;
-
 export default {
   name: 'DadardWebsite',
   components: {
@@ -30,31 +27,12 @@ export default {
   },
   data: function () {
     return {
-      apiUrl: `${config.apiHost}/profile/auth/jwt`,
       connected: false,
     }
-  },
-  created: function() {
-    this.checkConnected()
   },
   methods: {
     connect(value) {
       this.connected = value;
-    },
-    checkConnected: function () {
-      let self = this;
-      let token = localStorage.getItem(config.jwt.tokenKey);
-      if (token == null) {
-        self.connected = false;
-        return;
-      }
-
-      axios.get(this.apiUrl).then(function(response) {
-        self.connected = response.status === 200 && response.data.Status === true;
-      })
-      .catch(function(error) {
-        console.log(error)
-      });
     }
   }
 }

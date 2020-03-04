@@ -27,6 +27,7 @@
         name: "ConnectionForm",
         data: function () {
           return {
+              logger: null,
               username: null,
               password: null,
               errorStatus: null,
@@ -36,7 +37,34 @@
         props: {
           connected: Boolean
         },
+        created: function() {
+            this.checkConnected()
+        },
         methods: {
+            checkConnected: function () {
+                let self = this;
+                let token = localStorage.getItem(config.jwt.tokenKey);
+                if (token == null) {
+                    console.log("no token found in storage");
+                    self.connected = false;
+                    return;
+                }
+
+                axios.get(this.apiUrl).then(function(response) {
+                    let jwtValidity = response.status === 200 && response.data.Status === true;
+                    let message;
+                    if (jwtValidity) {
+                        message = "jwt is valid"
+                    } else {
+                        message = "jwt is not valid"
+                    }
+                    console.log(message);
+                    self.connected = jwtValidity
+                })
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+            },
             logIn: function () {
                 if (this.username == null || this.password == null) {
                     this.errorStatus = "empty entry";
@@ -50,6 +78,7 @@
                         password: self.password
                     }})
                     .then(function(response) {
+                        console.log(response);
                         if (response.status !== 200) {
                            let msg = response.data.Message;
                            if (msg) {
@@ -59,7 +88,8 @@
                             self.$emit('update', true)
                         }
                     }).catch(function(error) {
-                        console.log(error)
+                        console.log(error);
+                        self.errorStatus = error.response.data.Message;
                 });
 
             },
