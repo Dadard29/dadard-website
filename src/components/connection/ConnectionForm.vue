@@ -63,72 +63,70 @@
         },
         methods: {
             checkConnected: function () {
-                let self = this;
                 let token = localStorage.getItem(config.jwt.tokenKey);
                 if (token == null) {
-                    self.logger.debug("no token found in storage");
+                    this.logger.debug("no token found in storage");
                     return;
                 }
 
-                let reqConfig = {
-                    headers: {
-                        Authorization: token
-                    }
-                };
-
-                this.service.get(this.jwtRoute, reqConfig).then(function(response) {
-                    let jwtValidity = response.status === 200 && response.data.Status === true;
-                    if (jwtValidity) {
-                        self.logger.debug("token is valid");
-                        // in that case, trigger the profile retrieve
-                        self.getProfileAndConnect(token);
-                    } else {
-                        self.logger.debug("token is invalid");
-                    }
-                })
+                let self = this;
+                this.checkJwt(token)
+                    .then(function(status) {
+                        if (status) {
+                            self.logger.debug("current token valid");
+                            return self.getProfile(token);
+                        } else {
+                            self.logger.debug("current token invalid");
+                        }
+                    })
+                    .then(function(profile) {
+                        self.logger.info("profile retrieved");
+                        self.storeJwtAndConnect(token, profile);
+                    })
                     .catch(function(error) {
-                        self.logger.error(error.response.data.Message);
-                    });
+                        self.logger.error(error)
+                    })
+
             },
             logIn: function () {
-                // get a new jwt from basic auth
                 if (!this.username || !this.password) {
                     this.logger.error("empty entry");
                     return
                 }
 
                 let self = this;
-                this.service.post(this.jwtRoute, {}, {
-                    auth: {
-                        username: self.username,
-                        password: self.password
-                    }})
-                    .then(function(response) {
-                        if (response.status !== 200) {
-                           let msg = response.data.Message;
-                           if (msg) {
-                               self.logger.warning(msg);
-                           }
-                        } else {
-                            let jwt = response.data.Content;
-                            self.getProfileAndConnect(jwt);
-                        }
-                    }).catch(function(error) {
-                        if (error.response) {
-                            self.logger.error(error.response.data.Message);
-                        } else {
-                            self.logger.error(error);
-                        }
-
-                });
+                let jwt;
+                this.getJwt(this.username, this.password)
+                    .then(function(newJwt) {
+                        jwt = newJwt;
+                        self.logger.info("token retrieved");
+                        return self.getProfile(jwt);
+                    })
+                    .then(function(profile) {
+                        self.logger.info("profile retrieved");
+                        self.storeJwtAndConnect(jwt, profile);
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
+                    });
 
             },
             signUp: function () {
                 if (this.username == null || this.password == null) {
                     this.logger.error("empty entry");
                 }
+
+                let self = this;
+                let profile;
+                this.createProfile(this.username, this.password)
+                    .then(function(newProfile) {
+                        profile = newProfile;
+                        return self.getJwt(self.username, self.password);
+                    })
+                    .then(jwt => self.storeJwtAndConnect(jwt, profile));
+
             },
-            getProfileAndConnect(jwt) {
+            getProfile: function(jwt) {
                 // retrieve the profile from the JWT and trigger connect
                 let reqConfig = {
                     headers: {
@@ -136,8 +134,25 @@
                     }
                 };
 
+                return this.service.get(this.profileRoute, reqConfig)
+                    .then(function(response) {
+                        return response.data.Content;
+                    })
+                    .catch(function(error) {
+                        if (error.response) {
+                            throw error.response.data.Message;
+                        } else {
+                            throw error;
+                        }
+                    });
+            },
+            createProfile: function(username, password) {
                 let self = this;
-                this.service.get(this.profileRoute, reqConfig)
+                return this.service.post(this.profileRoute, {}, {
+                    auth: {
+                        username: username,
+                        password: password
+                    }})
                     .then(function(response) {
                         if (response.status !== 200) {
                             let msg = response.data.Message;
@@ -145,19 +160,57 @@
                                 self.logger.warning(msg);
                             }
                         } else {
-                            // the profile has been retrieved
-                            let profile = response.data.Content;
-                            localStorage.setItem(config.jwt.tokenKey, jwt);
-                            self.$emit('connect', profile);
+                            return response.data.Content;
                         }
+                    }).catch(function(error) {
+                    if (error.response) {
+                        self.logger.error(error.response.data.Message);
+                    } else {
+                        self.logger.error(error);
+                    }
+
+                });
+            },
+            getJwt: function(username, password) {
+
+                return this.service.post(this.jwtRoute, {}, {
+                    auth: {
+                        username: username,
+                        password: password
+                    }})
+                    .then(function(response) {
+                        return response.data.Content;
                     })
                     .catch(function(error) {
                         if (error.response) {
-                            self.logger.error(error.response.data.Message);
+                            throw error.response.data.Message;
                         } else {
-                            self.logger.error(error);
+                            throw error;
+                        }
+                });
+            },
+            checkJwt: function(token) {
+                let reqConfig = {
+                    headers: {
+                        Authorization: token
+                    }
+                };
+
+                return this.service.get(this.jwtRoute, reqConfig)
+                    .then(function(response) {
+                        return response.data.Status === true;
+                })
+                    .catch(function(error) {
+                        if (error.response) {
+                            throw error.response.data.Message;
+                        } else {
+                            throw error;
                         }
                     });
+            },
+            storeJwtAndConnect: function(jwt, profile) {
+                localStorage.setItem(config.jwt.tokenKey, jwt);
+                this.$emit('connect', profile);
             }
         }
     }

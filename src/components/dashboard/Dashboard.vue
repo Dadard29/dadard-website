@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        dashboard
     </div>
 </template>
 
@@ -27,15 +27,16 @@
             this.service = axios.create({
                 baseURL: this.apiUrl,
                 headers: {
-                    
+                    Authorization: token
                 }
             });
             this.fetchSubs();
         },
         methods: {
             fetchSubs() {
-                let self = this;
-                this.service.get(this.subListRoute)
+                this.logger.info('fetch subs')
+                // let self = this;
+                // this.service.get(this.subListRoute)
             }
         }
     }

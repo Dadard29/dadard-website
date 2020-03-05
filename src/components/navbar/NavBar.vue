@@ -5,20 +5,13 @@
             Dadard Website
         </a>
         <div class="navbar-nav">
-            <router-link to="/dashboard" class="nav-item nav-link" >Dashboard</router-link>
+            <router-link to="/" class="nav-item nav-link" >Dashboard</router-link>
             <router-link to="/profile" class="nav-item nav-link" >Profile</router-link>
-            <router-link to="/catalog">Catalog</router-link>
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Interfacesl
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" >Youtube Download</a>
-                </div>
-            </div>
+            <router-link to="/catalog" class="nav-item nav-link" >Catalog</router-link>
         </div>
         <div>
             Logged as {{this.profile.Username}}
+            <button v-on:click="logOut" class="btn btn-outline-danger" style="margin-left: 30px">Log Out</button>
         </div>
     </nav>
 </template>
@@ -33,6 +26,11 @@
         },
         props: {
             profile: Profile
+        },
+        methods: {
+            logOut: function() {
+                this.$emit('disconnect')
+            }
         }
     }
 </script>

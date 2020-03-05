@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="connected">
-      <NavBar :profile="profile" />
+      <NavBar :profile="profile" @disconnect="disconnect" />
       <Router />
     </div>
     <div v-else>
@@ -18,6 +18,8 @@ import Router from "@/components/router/Router";
 import NavBar from "@/components/navbar/NavBar";
 import Profile from "./models/profile";
 
+const config = require("./assets/config.json");
+
 export default {
   name: 'DadardWebsite',
   components: {
@@ -33,13 +35,17 @@ export default {
     }
   },
   methods: {
-    connect(profile) {
+    connect: function(profile) {
       this.connected = true;
       this.profile = new Profile(
               profile.ProfileKey,
               profile.Username,
               profile.DateCreated
       );
+    },
+    disconnect: function() {
+      localStorage.removeItem(config.jwt.tokenKey);
+      this.connected = false;
     }
   }
 }
