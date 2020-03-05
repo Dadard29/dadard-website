@@ -14,9 +14,9 @@
                 </div>
                 <div class="col-lg text-center">
                     <div style="padding-bottom: 10px">
-                        <a style="padding: 5px" :href="ribbonLinks.githubProfile" target="_blank" ><img src="../assets/github.png" width="32px"></a>
-                        <a style="padding: 5px" :href="ribbonLinks.gitlabProfile" target="_blank" ><img src="../assets/gitlab.png" width="32px"></a>
-                        <a style="padding: 5px" :href="ribbonLinks.linkedinProfile" target="_blank" ><img src="../assets/linkeding.png" width="32px"></a>
+                        <a style="padding: 5px" :href="ribbonLinks.githubProfile" target="_blank" ><img src="../assets/icons/github.png" width="32px"></a>
+                        <a style="padding: 5px" :href="ribbonLinks.gitlabProfile" target="_blank" ><img src="../assets/icons/gitlab.png" width="32px"></a>
+                        <a style="padding: 5px" :href="ribbonLinks.linkedinProfile" target="_blank" ><img src="../assets/icons/linkeding.png" width="32px"></a>
                     </div>
                     <div>
                         Dadard Website - <a v-bind:href="infos.LicenseUrl" target="_blank">{{infos.License}}</a>

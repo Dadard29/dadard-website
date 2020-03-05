@@ -5,9 +5,15 @@
             Dadard Website
         </a>
         <div class="navbar-nav">
-            <router-link to="/" class="nav-item nav-link" >Dashboard</router-link>
-            <router-link to="/profile" class="nav-item nav-link" >Profile</router-link>
-            <router-link to="/catalog" class="nav-item nav-link" >Catalog</router-link>
+            <router-link to="/" class="nav-item nav-link" exact-active-class="active">
+                Dashboard
+            </router-link>
+            <router-link to="/profile" class="nav-item nav-link" exact-active-class="active">
+                Profile
+            </router-link>
+            <router-link to="/catalog" class="nav-item nav-link" exact-active-class="active">
+                Catalog
+            </router-link>
         </div>
         <div>
             Logged as {{this.profile.Username}}
@@ -35,6 +41,8 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .router-link-active {
 
+    }
 </style>

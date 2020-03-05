@@ -1,6 +1,9 @@
 <template>
     <div>
-        dashboard
+        <h3>Dashboard</h3>
+        <div>
+
+        </div>
     </div>
 </template>
 
