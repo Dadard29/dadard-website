@@ -25,11 +25,9 @@
 
 <script>
     import Profile from "../../models/profile";
-    import Router from "../router/Router";
 
     export default {
         name: "NavBar",
-        components: {Router},
         data: function() {
             return {}
         },
