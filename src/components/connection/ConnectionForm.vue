@@ -89,6 +89,7 @@
 
             },
             logIn: function () {
+                // interface
                 if (!this.username || !this.password) {
                     this.logger.error("empty entry");
                     return
@@ -112,6 +113,7 @@
 
             },
             signUp: function () {
+                // interface
                 if (this.username == null || this.password == null) {
                     this.logger.error("empty entry");
                 }
@@ -123,11 +125,13 @@
                         profile = newProfile;
                         return self.getJwt(self.username, self.password);
                     })
-                    .then(jwt => self.storeJwtAndConnect(jwt, profile));
+                    .then(jwt => self.storeJwtAndConnect(jwt, profile))
+                    .catch(function(error) {
+                        self.logger.error(error)
+                    });
 
             },
             getProfile: function(jwt) {
-                // retrieve the profile from the JWT and trigger connect
                 let reqConfig = {
                     headers: {
                         Authorization: jwt
@@ -162,14 +166,14 @@
                         } else {
                             return response.data.Content;
                         }
-                    }).catch(function(error) {
-                    if (error.response) {
-                        self.logger.error(error.response.data.Message);
-                    } else {
-                        self.logger.error(error);
-                    }
-
-                });
+                    })
+                    .catch(function(error) {
+                        if (error.response) {
+                            throw error.response.data.Message;
+                        } else {
+                            throw error;
+                        }
+                    });
             },
             getJwt: function(username, password) {
 
@@ -187,7 +191,7 @@
                         } else {
                             throw error;
                         }
-                });
+                    });
             },
             checkJwt: function(token) {
                 let reqConfig = {
@@ -199,7 +203,7 @@
                 return this.service.get(this.jwtRoute, reqConfig)
                     .then(function(response) {
                         return response.data.Status === true;
-                })
+                    })
                     .catch(function(error) {
                         if (error.response) {
                             throw error.response.data.Message;

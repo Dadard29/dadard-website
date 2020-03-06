@@ -8,4 +8,8 @@ export default class Api {
     Image;
     CreationDate;
     IsStandard;
+
+    // js added layers
+    IsSubscribed;
+    Status;
 }
