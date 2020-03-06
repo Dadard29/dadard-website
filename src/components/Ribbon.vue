@@ -8,7 +8,9 @@
                             <img src="../assets/eddardStartPortrait.png" style="height: 50px">
                         </div>
                         <div class="col-lg text-left">
-                            <i>"{{getQuote()}}"</i>
+                            <footer class="text-muted">
+                                <cite title="Eddard Stark quote">"{{getQuote()}}"</cite>
+                            </footer>
                         </div>
                     </div>
                 </div>
@@ -25,8 +27,6 @@
                 <div class="col-lg text-right">
                     Website Version {{version}} -
                     API Version {{infos.Version}} -
-<!--                    <span class="badge badge-light">Website Version {{version}}</span> - -->
-<!--                    <span class="badge badge-light">API Version {{infos.Version}}</span> - -->
                     <a style="padding: 5px" :href="ribbonLinks.reportIssue" target="_blank" >Report an issue</a>
                 </div>
             </div>

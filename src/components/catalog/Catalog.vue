@@ -1,9 +1,10 @@
 <template>
     <div>
-<!--        <div style="padding: 15px">-->
+<!--        header-->
         <div class="container-fluid">
             <h3>Catalog</h3>
         </div>
+<!--        inputs-->
         <div class="container-fluid">
             <div class="row">
                 <div class="col-1">
@@ -38,7 +39,8 @@
                 </div>
             </div>
         </div>
-        <div style="padding: 30px">
+        <div class="container-fluid" style="padding: 30px">
+<!--            list view-->
             <div v-if="listView">
                 <table class="table">
                     <thead>
@@ -71,6 +73,7 @@
                     </tbody>
                 </table>
             </div>
+<!--            grid view-->
             <div v-else>
                 <div class="container-fluid">
                     <div class="card-columns">
@@ -86,15 +89,19 @@
                             <div class="card-body">
                                 <h5 class="card-title"><img :src="api.IconUrl" class="icon"> {{api.Name}}</h5>
                                 <div class="card-text">
-                                    <p>
-                                        <a :href="api.DocumentationUrl" target="_blank" class="card-link"><img src="../../assets/icons/book.png" class="icon-link"></a>
-                                        <a :href="api.VCSUrl" target="_blank" class="card-link"><img src="../../assets/icons/git.png" class="icon-link"></a>
-                                        <a :href="api.BuildUrl" target="_blank" class="card-link"><img src="../../assets/icons/build.png" class="icon-link"></a>
+                                    <p v-if="api.IsStandard">
+                                        {{api.Infos.Description}}
+                                    </p>
+                                    <p v-else>
+                                        <i class="text-muted">No infos available here</i>
                                     </p>
                                     <p>
-                                        Created at {{api.CreationDate}}
+                                        Created at {{parseTime(api.CreationDate)}}
                                     </p>
                                 </div>
+                                <a :href="api.DocumentationUrl" target="_blank" class="card-link"><img src="../../assets/icons/book.png" class="icon-link"></a>
+                                <a :href="api.VCSUrl" target="_blank" class="card-link"><img src="../../assets/icons/git.png" class="icon-link"></a>
+                                <a :href="api.BuildUrl" target="_blank" class="card-link"><img src="../../assets/icons/build.png" class="icon-link"></a>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted" v-if="api.IsStandard">Standard</small>
@@ -167,15 +174,19 @@
             this.fetchApis();
         },
         methods: {
+            parseTime(s) {
+                return new Date(s).toDateString()
+            },
             setFilter: function(value) {
+                // interface
                 this.filter = value
             },
             switchView(value) {
+                // interface
                 this.listView = value;
             },
             refresh() {
                 // interface
-
                 this.rawApiList = [];
                 this.fetchApis();
             },
