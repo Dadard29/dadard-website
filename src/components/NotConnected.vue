@@ -11,11 +11,6 @@
         <ConnectionForm @connect="connect"/>
       </div>
     </div>
-<!--    <div class="row" style="padding: 40px">-->
-<!--      <div class="col-lg text-center">-->
-<!--        <img class="wolf" src="../assets/start_wolf.png" />-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 

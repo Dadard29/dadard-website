@@ -24,8 +24,8 @@
                         Dadard Website - <a v-bind:href="infos.LicenseUrl" target="_blank">{{infos.License}}</a>
                     </div>
                 </div>
-                <div class="col-lg text-right">
-                    Website Version {{version}} -
+                <div class="col-lg text-right text-muted">
+                    Front Version {{version}} -
                     API Version {{infos.Version}} -
                     <a style="padding: 5px" :href="ribbonLinks.reportIssue" target="_blank" >Report an issue</a>
                 </div>

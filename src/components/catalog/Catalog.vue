@@ -7,7 +7,7 @@
 <!--        inputs-->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-1">
+                <div class="col-sm">
                     <button v-on:click="refresh" class="btn btn-outline-primary widget-button">
                         <img src="../../assets/icons/refresh.png" class="widget-img"> refresh
                     </button>
@@ -25,7 +25,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-1">
+                <div class="col-sm">
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <label class="btn btn-outline-primary active" v-on:click="switchView(false)">
                             <input type="radio" name="view" id="grid" autocomplete="off" checked>
@@ -60,15 +60,22 @@
                     <tbody>
                         <tr v-for="api in apiList" :key="api.Name">
                             <td><img :src="api.IconUrl" style="height: 24px" /></td>
-                            <td>{{api.Name}}</td>
+                            <td><router-link :to="`/catalog/${api.Name}`" class="thumb-link">{{api.Name}}</router-link></td>
                             <td><a :href="api.DocumentationUrl" target="_blank"><img src="../../assets/icons/book.png" class="icon-link" alt="Documentation"></a></td>
                             <td>{{api.Hostname}}</td>
                             <td><a :href="api.VCSUrl" target="_blank"><img src="../../assets/icons/git.png" class="icon-link"></a></td>
                             <td><a :href="api.BuildUrl" target="_blank"><img src="../../assets/icons/build.png" class="icon-link"></a></td>
                             <td>{{api.Image}}</td>
                             <td>{{api.CreationDate}}</td>
-                            <td><img src="../../assets/icons/invalid.png" class="icon"></td>
-                            <td><img src="../../assets/icons/valid.png" class="icon"></td>
+                            <td>
+                                <img v-if="api.IsSubscribed" src="../../assets/icons/valid.png" class="icon">
+                                <img v-else src="../../assets/icons/invalid.png" class="icon">
+                            </td>
+                            <td>
+                                <img v-if="api.Status === true" src="../../assets/icons/valid.png" class="icon">
+                                <img v-if="api.Status === false" src="../../assets/icons/invalid.png" class="icon">
+                                <img v-if="api.Status === null" src="../../assets/icons/unknown.png" class="icon">
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -87,9 +94,13 @@
                                 <span class="badge badge-warning" v-else>Not subscribed</span>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title"><img :src="api.IconUrl" class="icon"> {{api.Name}}</h5>
+                                <router-link :to="`/catalog/${api.Name}`" class="thumb-link">
+                                    <h5 class="card-title">
+                                        <img :src="api.IconUrl" class="icon"> {{api.Name}}
+                                    </h5>
+                                </router-link>
                                 <div class="card-text">
-                                    <p v-if="api.IsStandard">
+                                    <p v-if="api.Infos">
                                         {{api.Infos.Description}}
                                     </p>
                                     <p v-else>
@@ -119,7 +130,7 @@
     import LoggerService from "../../models/logger";
 
     const config = require('../../assets/config.json');
-    const axios = require('axios').default;
+    const apiService = require('../../service/apiService').default;
 
     export default {
         name: "Catalog",
@@ -129,16 +140,22 @@
                 rawApiList: [],
                 logger: null,
                 service: null,
-                apiUrl: config.apiHost,
-                apiRoute: "/api",
-                subRoute: "/subs",
-                listView: false,
-                healthRoute: "/health",
-                infosRoute: "/infos"
+                listView: false
+
             }
         },
         computed: {
           apiList: function() {
+              const compare = function(a, b) {
+                  if (a.Name < b.Name) {
+                      return -1;
+                  } else if (a.Name > b.Name) {
+                      return 1;
+                  } else {
+                      return 0;
+                  }
+              };
+
               if (this.filter === 1) {
                   let l = [];
                   for (let i = 0; i < this.rawApiList.length; i++) {
@@ -147,7 +164,8 @@
                           l.push(api)
                       }
                   }
-                  return l;
+                  l.sort(compare);
+                  return l
               } else if (this.filter === 2) {
                   let l = [];
                   for (let i = 0; i < this.rawApiList.length; i++) {
@@ -156,21 +174,22 @@
                           l.push(api)
                       }
                   }
-                  return l;
+                  l.sort(compare);
+                  return l
               } else {
-                  return this.rawApiList
+                  let l = this.rawApiList.slice();
+                  l.sort(compare);
+                  return l
               }
           }
         },
-        created: function() {
+        created() {
             this.logger = new LoggerService();
             const token = localStorage.getItem(config.jwt.tokenKey);
-            this.service = axios.create({
-                baseURL: this.apiUrl,
-                headers: {
-                    Authorization: token
-                }
+            this.service = new apiService({
+                Authorization: token
             });
+
             this.fetchApis();
         },
         methods: {
@@ -193,32 +212,34 @@
             fetchApis() {
                 // interface
                 let self = this;
-                this.getApiList()
+                this.service.getApiList()
                     .then(function(apiList) {
                         for (let i = 0; i < apiList.length; i++) {
                             let api = apiList[i];
 
                             // for each api, check sub and status
-                            self.checkSub(api.Name)
+                            self.service.getSub(api.Name)
                                 .then(function(checkSubRes) {
-                                    api.IsSubscribed = checkSubRes;
-                                    return self.checkStatus(api.Hostname, api.IsStandard)
+                                    api.IsSubscribed = checkSubRes.Status;
+                                    return self.service.getStatus(api.Hostname, api.IsStandard)
                                 })
                                 .then(function(status) {
                                     api.Status = status;
-                                    return self.getInfos(api.Hostname, api.IsStandard)
+                                    if (!status && api.IsStandard) {
+                                        return self.service.getInfos(api.Hostname, false)
+                                    }
+                                    return self.service.getInfos(api.Hostname, api.IsStandard)
                                 })
                                 .then(function(infos) {
                                     api.Infos = infos;
-                                    console.log(api);
                                     self.rawApiList.push(api);
                                 })
                                 .catch(function(error) {
-                                if (error.response) {
-                                    self.logger.error(error.response.data.Message);
-                                } else {
-                                    self.logger.error(error);
-                                }
+                                    if (error.response) {
+                                        self.logger.error(error.response.data.Message);
+                                    } else {
+                                        self.logger.error(error);
+                                    }
                             });
                         }
                     })
@@ -229,47 +250,7 @@
                             self.logger.error(error);
                         }
                     })
-            },
-            checkSub(apiName) {
-                return this.service.get(this.subRoute, {
-                        params: {
-                            apiName: apiName
-                        }
-                    })
-                    .then(function(response) {
-                        return response.data.Status;
-                    })
-            },
-            checkStatus(hostname, isStandard) {
-                if (isStandard) {
-                    return axios.get(`http://${hostname}${this.healthRoute}`)
-                        .then(function(response) {
-                            return response.data.Status
-                        })
-                } else {
-                    return new Promise((resolve) => {
-                        resolve(null)
-                    })
-                }
-            },
-            getInfos(hostname, isStandard) {
-                if (isStandard) {
-                    return axios.get(`http://${hostname}${this.infosRoute}`)
-                        .then(function(response) {
-                            return response.data
-                        })
-                } else {
-                    return new Promise((resolve) => {
-                        resolve(null)
-                    })
-                }
-            },
-            getApiList() {
-                return this.service.get(this.apiRoute)
-                    .then(function(response) {
-                        return response.data.Content
-                    })
-            },
+            }
         }
     }
 </script>
@@ -277,13 +258,14 @@
 <style scoped>
     .icon-link {
         height: 32px;
-        padding: 1px;
+        padding: 3px;
+        border: solid 1px grey;
+        border-radius: 16px;
     }
 
     .icon-link:hover {
-        border: solid 1px white;
-        border-radius: 16px;
         background-color: grey;
+        border: solid 2px white;
     }
 
     .icon {
@@ -306,5 +288,16 @@
     .btn {
         padding: 3px 7px;
         /*border-color: white;*/
+    }
+
+    .thumb-link {
+        text-transform: uppercase;
+        color: white;
+        font-weight: bold;
+    }
+
+    .thumb-link:hover {
+        color: grey;
+        text-decoration: none;
     }
 </style>

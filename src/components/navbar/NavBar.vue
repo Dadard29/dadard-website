@@ -11,7 +11,7 @@
             <router-link to="/profile" class="nav-item nav-link" exact-active-class="active">
                 Profile
             </router-link>
-            <router-link to="/catalog" class="nav-item nav-link" exact-active-class="active">
+            <router-link to="/catalog" class="nav-item nav-link" active-class="active">
                 Catalog
             </router-link>
         </div>

@@ -1,6 +1,7 @@
 <template>
-    <div class="logger">
-        <div>
+    <div class="logger-global">
+        <small class="text-muted">logger</small>
+        <div class="logger">
             <span v-for="msg in loggerService.getLastMessages()" :key="msg.key">
                 <span :style="`color: ${msg.color}`">{{msg.date}} {{msg.msg}}</span><br>
             </span>
@@ -20,9 +21,13 @@
 </script>
 
 <style scoped>
-    .logger {
+    .logger-global {
         padding: 15px;
         margin: 15px;
+    }
+
+    .logger {
+        padding: 15px;
         border: solid 1px white;
         position: relative;
         background: rgba(0, 0, 0, 0.7);
