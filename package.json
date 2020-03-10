@@ -1,6 +1,6 @@
 {
   "name": "dadard-website",
-  "version": "0.1.0",
+  "version": "{{VERSION}}",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --host localhost --port 8081",
