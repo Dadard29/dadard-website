@@ -6,6 +6,8 @@ services:
   - docker:dind
 
 build-and-test:
+  only:
+    - tags
   stage: build
   script:
     - docker info
