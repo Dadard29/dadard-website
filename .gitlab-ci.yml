@@ -1,17 +1,16 @@
-image: debian:latest
+image: docker:stable
 stages:
   - build
+
+services:
+  - docker:dind
 
 build-and-test:
   stage: build
   script:
-    - apt-get -y update && apt-get -y install wget gnupg
-    - echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-    - wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/Debian_10/Release.key -O- | apt-key add -
-    - apt-get update -qq -y && apt-get -qq -y install podman
-    - podman info
+    - docker info
     - echo "registering with $REGISTRY_USERNAME $REGISTRY_PASSWORD"
-    - echo $REGISTRY_PASSWORD | podman login -u $REGISTRY_USERNAME --password-stdin registry.gitlab.com
+    - echo $REGISTRY_PASSWORD | docker login -u $REGISTRY_USERNAME --password-stdin registry.gitlab.com
     - echo version set to $CI_COMMIT_SHORT_SHA
-    - podman build -t $IMAGE_NAME --build-arg FRONT_VERSION=$CI_COMMIT_SHORT_SHA --build-arg API_HOST=$API_HOST .
-    - podman push $IMAGE_NAME
+    - docker build -t $IMAGE_NAME --build-arg FRONT_VERSION=$CI_COMMIT_SHORT_SHA --build-arg API_HOST=$API_HOST .
+    - docker push $IMAGE_NAME
