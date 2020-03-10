@@ -19,6 +19,8 @@ build-and-test:
     - docker push $IMAGE_NAME
 
 deploy:
+  only:
+    - tags
   stage: deploy
   script:
     - apk add --update curl wget
