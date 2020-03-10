@@ -1,32 +1,17 @@
-image: docker:stable
+image: debian:latest
 stages:
   - build
-  - deploy
-
-services:
-  - docker:dind
 
 build-and-test:
   stage: build
   script:
-    - docker info
-    - ls -l
+    - apt-get -y update && apt-get -y install wget gnupg
+    - echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    - wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/Debian_10/Release.key -O- | apt-key add -
+    - apt-get update -qq -y && apt-get -qq -y install podman
+    - podman info
     - echo "registering with $REGISTRY_USERNAME $REGISTRY_PASSWORD"
-    - echo $REGISTRY_PASSWORD | docker login -u $REGISTRY_USERNAME --password-stdin registry.gitlab.com
+    - echo $REGISTRY_PASSWORD | podman login -u $REGISTRY_USERNAME --password-stdin registry.gitlab.com
     - echo version set to $CI_COMMIT_SHORT_SHA
-    - docker build -t $IMAGE_NAME --build-arg ARG_BOT_WEBHOOK=$ARG_BOT_WEBHOOK --build-arg ARG_BOT_TOKEN=$ARG_BOT_TOKEN --build-arg ARG_USERNAME_DB=$ARG_USERNAME_DB --build-arg ARG_PASSWORD_DB=$ARG_PASSWORD_DB --build-arg ARG_JWT_SECRET=$ARG_JWT_SECRET --build-arg ARG_VERSION=$CI_COMMIT_SHORT_SHA .
-    - docker run --rm $IMAGE_NAME go test -v ./...
-    - docker push $IMAGE_NAME
-
-deploy:
-  stage: deploy
-  script:
-    - apk add --update curl wget
-    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
-    - export CONTAINER_NAME
-    - export IMAGE_NAME
-    - export POD_NAME
-    - export DEPLOYER_URL
-    - export DEPLOYER_TOKEN
-    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN in pod $POD_NAME"
-    - sh deploy.sh
+    - podman build -t $IMAGE_NAME --build-arg FRONT_VERSION=$CI_COMMIT_SHORT_SHA --build-arg API_HOST=$API_HOST .
+    - podman push $IMAGE_NAME
