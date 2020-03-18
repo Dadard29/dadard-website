@@ -129,15 +129,13 @@
                 newPassword: null,
                 newPasswordConfirm: null,
                 usernameInput: null,
+                jwt: null
             }
         },
         created() {
             this.logger = new LoggerService();
-            const token = localStorage.getItem(config.jwt.tokenKey);
-            const headers = {
-                Authorization: token
-            };
-            this.service = new profileService(headers);
+            this.jwt = localStorage.getItem(config.jwt.tokenKey);
+            this.service = new profileService({});
             this.getProfile()
         },
         methods: {
@@ -151,7 +149,7 @@
             },
             getProfile() {
                 let self = this;
-                this.service.getProfile()
+                this.service.getProfile(this.jwt)
                     .then(function(profile) {
                         self.profile = profile;
                     })

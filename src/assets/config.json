@@ -15,5 +15,5 @@
   "jwt": {
     "tokenKey": "session_token"
   },
-  "apiHost": "{{API_HOST}}"
+  "apiHost": "http://localhost:8080"
 }

@@ -5,6 +5,9 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Profile from "./components/profile/Profile";
 import Catalog from "./components/catalog/Catalog";
 import CatalogDetail from "./components/catalog/CatalogDetail";
+import NotFound from "@/components/NotFound";
+import YoutubeDownload from "@/components/guis/YoutubeDownload";
+import About from "@/components/About";
 
 Vue.config.productionTip = false;
 
@@ -14,11 +17,16 @@ const routes = [
   {path: "/", component: Dashboard},
   {path: "/profile", component: Profile},
   {path: "/catalog", component: Catalog},
-  {path: "/catalog/:apiName", component: CatalogDetail}
+  {path: "/catalog/:apiName", component: CatalogDetail},
+  {path: "/apis/youtube-download", component: YoutubeDownload},
+  {path: "/about", component: About},
+  {path: "/404", component: NotFound},
+  {path: "*", redirect: "/404"}
 ];
 
 const router = new VueRouter({
-  routes
+  mode: "history",
+  routes: routes
 });
 
 new Vue({

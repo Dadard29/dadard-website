@@ -5,7 +5,7 @@
                 <img :src="apiObject.IconUrl" class="api-icon"> {{apiObject.Name}}
             </h3>
             <div class="container-fluid" style="padding-left: 70px">
-                <div class="row main-row" >
+                <div class="row main-row align-items-center" >
 <!--                    status + infos-->
                     <div class="col-sm" style="border-right: solid 1px white">
                         <div>
@@ -24,6 +24,16 @@
                         <div v-if="infos">
                             <div class="row">
                                 {{infos.Description}}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm">
+                                    <span class="text-muted">
+                                        hostname
+                                    </span>
+                                </div>
+                                <div class="col-sm">
+                                    {{apiObject.Hostname}}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm">

@@ -66,7 +66,7 @@
                             <td><a :href="api.VCSUrl" target="_blank"><img src="../../assets/icons/git.png" class="icon-link"></a></td>
                             <td><a :href="api.BuildUrl" target="_blank"><img src="../../assets/icons/build.png" class="icon-link"></a></td>
                             <td>{{api.Image}}</td>
-                            <td>{{api.CreationDate}}</td>
+                            <td>{{parseTime(api.CreationDate)}}</td>
                             <td>
                                 <img v-if="api.IsSubscribed" src="../../assets/icons/valid.png" class="icon">
                                 <img v-else src="../../assets/icons/invalid.png" class="icon">

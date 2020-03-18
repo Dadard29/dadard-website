@@ -35,8 +35,8 @@
     import LoggerService from "../../models/logger";
     import Logger from "@/components/logger/Logger.vue";
 
-    const axios = require('axios').default;
     const config = require("../../assets/config.json");
+    const profileService = require("@/service/profileService").default;
 
     export default {
         name: "ConnectionForm",
@@ -54,40 +54,11 @@
               profileRoute: "/profile/auth"
           }
         },
-        created: function() {
+        created() {
             this.logger = new LoggerService();
-            this.service = axios.create({
-                baseURL: this.apiUrl,
-            });
-            this.checkConnected()
+            this.service = new profileService({})
         },
         methods: {
-            checkConnected: function () {
-                let token = localStorage.getItem(config.jwt.tokenKey);
-                if (token == null) {
-                    this.logger.debug("no token found in storage");
-                    return;
-                }
-
-                let self = this;
-                this.checkJwt(token)
-                    .then(function(status) {
-                        if (status) {
-                            self.logger.debug("current token valid");
-                            return self.getProfile(token);
-                        } else {
-                            self.logger.debug("current token invalid");
-                        }
-                    })
-                    .then(function(profile) {
-                        self.logger.info("profile retrieved");
-                        self.storeJwtAndConnect(token, profile);
-                    })
-                    .catch(function(error) {
-                        self.logger.error(error)
-                    })
-
-            },
             logIn: function () {
                 // interface
                 if (!this.username || !this.password) {
@@ -97,11 +68,11 @@
 
                 let self = this;
                 let jwt;
-                this.getJwt(this.username, this.password)
+                this.service.getJwt(this.username, this.password)
                     .then(function(newJwt) {
                         jwt = newJwt;
                         self.logger.info("token retrieved");
-                        return self.getProfile(jwt);
+                        return self.service.getProfile(jwt);
                     })
                     .then(function(profile) {
                         self.logger.info("profile retrieved");
@@ -120,10 +91,10 @@
 
                 let self = this;
                 let profile;
-                this.createProfile(this.username, this.password)
+                this.service.createProfile(this.username, this.password)
                     .then(function(newProfile) {
                         profile = newProfile;
-                        return self.getJwt(self.username, self.password);
+                        return self.service.getJwt(self.username, self.password);
                     })
                     .then(jwt => self.storeJwtAndConnect(jwt, profile))
                     .catch(function(error) {
@@ -131,87 +102,24 @@
                     });
 
             },
-            getProfile: function(jwt) {
-                let reqConfig = {
-                    headers: {
-                        Authorization: jwt
-                    }
-                };
-
-                return this.service.get(this.profileRoute, reqConfig)
-                    .then(function(response) {
-                        return response.data.Content;
-                    })
-                    .catch(function(error) {
-                        if (error.response) {
-                            throw error.response.data.Message;
-                        } else {
-                            throw error;
-                        }
-                    });
-            },
-            createProfile: function(username, password) {
-                let self = this;
-                return this.service.post(this.profileRoute, {}, {
-                    auth: {
-                        username: username,
-                        password: password
-                    }})
-                    .then(function(response) {
-                        if (response.status !== 200) {
-                            let msg = response.data.Message;
-                            if (msg) {
-                                self.logger.warning(msg);
-                            }
-                        } else {
-                            return response.data.Content;
-                        }
-                    })
-                    .catch(function(error) {
-                        if (error.response) {
-                            throw error.response.data.Message;
-                        } else {
-                            throw error;
-                        }
-                    });
-            },
-            getJwt: function(username, password) {
-
-                return this.service.post(this.jwtRoute, {}, {
-                    auth: {
-                        username: username,
-                        password: password
-                    }})
-                    .then(function(response) {
-                        return response.data.Content;
-                    })
-                    .catch(function(error) {
-                        if (error.response) {
-                            throw error.response.data.Message;
-                        } else {
-                            throw error;
-                        }
-                    });
-            },
-            checkJwt: function(token) {
-                let reqConfig = {
-                    headers: {
-                        Authorization: token
-                    }
-                };
-
-                return this.service.get(this.jwtRoute, reqConfig)
-                    .then(function(response) {
-                        return response.data.Status === true;
-                    })
-                    .catch(function(error) {
-                        if (error.response) {
-                            throw error.response.data.Message;
-                        } else {
-                            throw error;
-                        }
-                    });
-            },
+            // getJwt: function(username, password) {
+            //
+            //     return this.service.post(this.jwtRoute, {}, {
+            //         auth: {
+            //             username: username,
+            //             password: password
+            //         }})
+            //         .then(function(response) {
+            //             return response.data.Content;
+            //         })
+            //         .catch(function(error) {
+            //             if (error.response) {
+            //                 throw error.response.data.Message;
+            //             } else {
+            //                 throw error;
+            //             }
+            //         });
+            // },
             storeJwtAndConnect: function(jwt, profile) {
                 localStorage.setItem(config.jwt.tokenKey, jwt);
                 this.$emit('connect', profile);

@@ -14,6 +14,19 @@
             <router-link to="/catalog" class="nav-item nav-link" active-class="active">
                 Catalog
             </router-link>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Interfaces
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <router-link to="/apis/youtube-download" class="dropdown-item">
+                        Youtube Download
+                    </router-link>
+                </div>
+            </div>
+            <router-link to="/about" class="nav-item nav-link" exact-active-class="active">
+                About
+            </router-link>
         </div>
         <div>
             Logged as {{this.profile.Username}}

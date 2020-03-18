@@ -8,12 +8,35 @@ export default class ProfileService {
             headers: headers
         });
         this.routes = {
-            profile: "/profile/auth"
+            profile: "/profile/auth",
+            jwt: "profile/auth/jwt"
         }
     }
 
-    getProfile() {
-        return this.service.get(this.routes.profile)
+    checkJwt(jwt) {
+        return this.service.get(this.routes.jwt, {
+            headers: {
+                Authorization: jwt
+            }
+        })
+            .then(function(response) {
+                return response.data.Status === true;
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message;
+                } else {
+                    throw error;
+                }
+            });
+    }
+
+    getProfile(jwt) {
+        return this.service.get(this.routes.profile, {
+            headers: {
+                Authorization: jwt
+            }
+        })
             .then(function(response) {
                 return response.data.Content
             })
@@ -59,6 +82,42 @@ export default class ProfileService {
                     throw error.response.data.Message
                 } else {
                     throw error
+                }
+            })
+    }
+
+    getJwt(username, password) {
+        return this.service.post(this.routes.jwt, {}, {
+            auth: {
+                username: username,
+                password: password
+            }})
+            .then(function(response) {
+                return response.data.Content;
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message;
+                } else {
+                    throw error;
+                }
+            })
+    }
+
+    createProfile(username, password) {
+        return this.service.post(this.routes.profile, {}, {
+            auth: {
+                username: username,
+                password: password
+            }})
+            .then(function(response) {
+                return response.data.Content
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message;
+                } else {
+                    throw error;
                 }
             })
     }
