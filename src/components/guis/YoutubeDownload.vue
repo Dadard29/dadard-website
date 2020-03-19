@@ -259,7 +259,7 @@
                             self.service = new ytdlService({
                                 Authorization: jwt,
                                 "X-Access-Token": self.accessToken
-                            }, `http://${hostname}`);
+                            }, `https://${hostname}`);
                             self.getVideoList();
                             self.getStatus();
 
