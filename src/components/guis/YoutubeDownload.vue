@@ -233,6 +233,13 @@
                 Authorization: jwt
             });
             this.getSub();
+
+            let self = this;
+            setTimeout(function() {
+                if (self.status.Done === false) {
+                    self.updateStatus();
+                }
+            }, 2000)
         },
         methods: {
             parseTime(s) {
@@ -340,39 +347,44 @@
                         // renew the status
                         self.getStatus();
 
-                        // wait until the status is retrieved to launch the update
-                        setTimeout(function() {
-                            self.animateProgressBar();
-
-                            const updateId = setInterval(function() {
-                                if (self.status.Done === true) {
-                                    clearInterval(updateId);
-                                    self.stopProgressBar();
-                                } else {
-                                    self.getStatus();
-                                }
-                            }, 2000)
-                        }, 2000);
+                        self.updateStatus();
                     })
                     .catch(function(error) {
                         self.logger.error(error)
                     })
             },
+            updateStatus() {
+                let self = this;
+                self.animateProgressBar();
+
+                const updateId = setInterval(function() {
+                    if (self.status.Done === true) {
+                        clearInterval(updateId);
+                        self.stopProgressBar();
+                    } else {
+                        self.getStatus();
+                    }
+                }, 2000)
+            },
             getFile() {
+                let self = this;
                 this.service.getFile()
                     .then(function(url) {
                         const link = document.getElementById('download-file-link');
                         link.href = url;
                         link.click();
-                    });
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error);
+                    })
             },
             animateProgressBar() {
-                let p = document.getElementById("download-progress-bar")
+                let p = document.getElementById("download-progress-bar");
                 p.classList.add("progress-bar-animated")
             },
 
             stopProgressBar() {
-                let p = document.getElementById("download-progress-bar")
+                let p = document.getElementById("download-progress-bar");
                 p.classList.remove("progress-bar-animated")
             }
         }
