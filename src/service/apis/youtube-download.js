@@ -66,12 +66,15 @@ export default class YoutubeDownloadService {
             })
     }
 
-    updateAll(title, artist, album, date) {
+    updateAll(title, artist, album, date, videoIdList) {
         return this.service.put(this.routes.videosList, {
-            Title: title,
-            Artist: artist,
-            Album: album,
-            Date: date
+            Infos: {
+                Title: title,
+                Artist: artist,
+                Album: album,
+                Date: date
+            },
+            VideoList: videoIdList
         })
             .then(function(response) {
                 return response.data.Content
@@ -85,8 +88,12 @@ export default class YoutubeDownloadService {
             })
     }
 
-    deleteAll() {
-        return this.service.delete(this.routes.videosList)
+    deleteAll(videoIdList) {
+        return this.service.delete(this.routes.videosList, {
+            data: {
+                VideoList: videoIdList
+            }
+        })
             .then(function(response) {
                 return response.data.Content
             })

@@ -11,11 +11,9 @@
             <h3>Youtube Download</h3>
             <div class="row">
 
-<!--                UPDATE LIST-->
-                <div class="col-" style="height: 100px">
-
+                <div class="col">
 <!--                    add stuff-->
-                    <div class="row sep">
+                    <div class="row">
                         <div class="col-lg">
 <!--                        add video-->
                             <h5>Add a video</h5>
@@ -24,12 +22,12 @@
                             </p>
                             <div class="form-inline">
                                 <div class="form-group mb-2">
-                                    <label for="videoIdInput" class="sr-only">Video ID</label>
+                                    <label for="videoUrlInput" class="sr-only">Video URL</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text custom-input-prepend">#</div>
                                         </div>
-                                        <input v-model="videoIdInput" type="text" class="form-control custom-input" id="videoIdInput" placeholder="Enter a video ID" required>
+                                        <input v-model="videoUrlInput" type="text" class="form-control custom-input" id="videoUrlInput" placeholder="Enter a video URL" required>
                                     </div>
                                 </div>
                                 <div class="input-group mx-sm-3 mb-2">
@@ -44,12 +42,12 @@
                             </p>
                             <div class="form-inline">
                                 <div class="form-group mb-2">
-                                    <label for="playlistIdInput" class="sr-only">Playlist ID</label>
+                                    <label for="playlistUrlInput" class="sr-only">Playlist ID</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text custom-input-prepend">#</div>
                                         </div>
-                                        <input v-model="playlistIdInput" type="text" class="form-control custom-input" id="playlistIdInput" placeholder="Enter a playlist ID" required>
+                                        <input v-model="playlistUrlInput" type="text" class="form-control custom-input" id="playlistUrlInput" placeholder="Enter a playlist URL" required>
                                     </div>
                                 </div>
                                 <div class="input-group mx-sm-3 mb-2">
@@ -58,92 +56,11 @@
                             </div>
                         </div>
                     </div>
-
-<!--                    update stuff-->
-                    <div class="row sep">
-                        <div class="col-lg">
-                            <h5>Update all videos</h5>
-                            <p>
-                                It will update all videos in your list
-                            </p>
-                            <label for="titleAllInput" class="sr-only">Title</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text custom-input-prepend">%T</div>
-                                </div>
-                                <input v-model="titleAllInput" type="text" class="form-control custom-input" id="titleAllInput" placeholder="Enter a title" required>
-                            </div>
-                            <label for="artistAllInput" class="sr-only">Artist</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text custom-input-prepend">%A</div>
-                                </div>
-                                <input v-model="artistAllInput" type="text" class="form-control custom-input" id="artistAllInput" placeholder="Enter an artist" required>
-                            </div>
-                            <label for="albumAllInput" class="sr-only">Album</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text custom-input-prepend">%a</div>
-                                </div>
-                                <input v-model="albumAllInput" type="text" class="form-control custom-input" id="albumAllInput" placeholder="Enter an album" required>
-                            </div>
-                            <label for="dateAllInput" class="sr-only">Date</label>
-                            <small class="text-muted">expected format is '2020-03-18'</small>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text custom-input-prepend">%d</div>
-                                </div>
-                                <input v-model="dateAllInput" type="text" class="form-control custom-input" id="dateAllInput" placeholder="Enter a date" required>
-                            </div>
-                            <button class="btn btn-outline-warning" v-on:click="updateAll">Update all</button>
-                        </div>
-                    </div>
-
-<!--                    delete stuff-->
-                    <div class="row sep-borderless">
-                        <div class="col-lg">
-                            <h5>Delete all videos</h5>
-                            <div class="form-inline">
-                                <div class="input-group mb-2">
-                                    <button v-on:click="deleteAll" class="btn btn-outline-danger">Remove all</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-<!--                LIST VIDEOS-->
-                <div class="col-lg">
-                    <div class="row sep-borderless">
-                        <div class="col-lg">
-        <!--                        LIST-->
-                            <div v-if="videoList">
-                                <h5>Videos list</h5>
-                                <div class="video-list">
-                                    <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Artist</th>
-                                        <th>Album</th>
-                                        <th>Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="v in videoList" :key="v.VideoId">
-                                        <td class="video-link"><a :href="`https://youtube.com/watch?v=${v.VideoId}`" target="_blank">{{v.Title}}</a></td>
-                                        <td>{{v.Artist}}</td>
-                                        <td>{{v.Album}}</td>
-                                        <td>{{parseTime(v.Date)}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row sep-borderless">
-<!--                        STATUS-->
+                <div class="col-8">
+                    <div class="row">
+                        <!--                        STATUS-->
                         <div class="col-sm">
                             <div class="card">
                                 <div class="card-header text-muted">
@@ -162,7 +79,7 @@
                                                 </div>
                                             </div>
                                             <small>started at {{new Date(status.DateStarted).toGMTString()}}</small><br>
-                                             <small v-if="status.Done">finished at {{new Date(status.DateFinished).toGMTString()}}</small>
+                                            <small v-if="status.Done">finished at {{new Date(status.DateFinished).toGMTString()}}</small>
                                         </div>
                                         <div class="card-text">
                                             <div v-if="status.Done === false" class="spinner-border text-primary" role="status">
@@ -185,8 +102,114 @@
                                 </div>
                             </div>
                         </div>
+<!--                        LOGGER-->
                         <div class="col-sm">
                             <Logger :logger-service="logger"></Logger>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5>Update infos</h5>
+                    <div class="card">
+                        <div class="card-header text-muted">
+                            Update {{selectedVideos.length}} videos' infos...
+                        </div>
+                        <div v-if="selectedVideos.length > 0" class="card-body">
+                            <label for="titleAllInput" class="sr-only">Title</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend card-prepend">Title</div>
+                                </div>
+                                <input v-model="titleAllInput" type="text" class="form-control custom-input" id="titleAllInput" placeholder="Enter a title" required>
+                            </div>
+                            <label for="artistAllInput" class="sr-only">Artist</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend card-prepend">Artist</div>
+                                </div>
+                                <input v-model="artistAllInput" type="text" class="form-control custom-input" id="artistAllInput" placeholder="Enter an artist" required>
+                            </div>
+                            <label for="albumAllInput" class="sr-only">Album</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend card-prepend">Album</div>
+                                </div>
+                                <input v-model="albumAllInput" type="text" class="form-control custom-input" id="albumAllInput" placeholder="Enter an album" required>
+                            </div>
+                            <label for="dateAllInput" class="sr-only">Date</label>
+                            <small class="text-muted">expected format is '2020-03-18'</small>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend card-prepend">Date</div>
+                                </div>
+                                <input v-model="dateAllInput" type="text" class="form-control custom-input" id="dateAllInput" placeholder="Enter a date" required>
+                            </div>
+                            <button class="btn btn-outline-warning" v-on:click="updateAll">Update</button>
+                        </div>
+                        <div v-else class="card-body">
+                            No video selected
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-8">
+
+                    <div v-if="videoList">
+                        <div class="row" style="padding: 5px">
+                            <div class="col-">
+                                <h5>Videos list</h5>
+                            </div>
+                            <div class="col-sm">
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <button v-on:click="getVideoList" class="btn btn-outline-primary" type="button">
+                                            <img src="../../assets/icons/refresh.png" style="height: 16px;"> refresh
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="btn-group">
+                                            <button v-on:click="selectAll" class="btn btn-outline-primary" type="button">Select all</button>
+                                            <button v-on:click="deselectAll" class="btn btn-outline-primary" type="button">Deselect all</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{this.selectedVideos.length}} videos selected
+                                    </div>
+                                    <div v-if="selectedVideos.length > 0" class="form-group">
+                                        <button v-on:click="deleteAll" class="btn btn-outline-danger" type="button">Remove {{selectedVideos.length}}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div style="max-height: 300px; overflow: auto">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Select...</th>
+                                    <th>Title</th>
+                                    <th>Artist</th>
+                                    <th>Album</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="v in videoList" :key="v.VideoId" :id="v.VideoId">
+                                    <td>
+                                        <div v-on:click="updateSelectedList(v.VideoId)" class="btn-group-toggle" data-toggle="buttons">
+                                            <button style="padding: 5px" class="btn btn-primary">
+                                                <img width="25px" src="../../assets/icons/update.png">
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="video-link"><a :href="`https://youtube.com/watch?v=${v.VideoId}`" target="_blank">{{v.Title}}</a></td>
+                                    <td>{{v.Artist}}</td>
+                                    <td>{{v.Album}}</td>
+                                    <td>{{parseTime(v.Date)}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -214,15 +237,16 @@
                 logger: null,
                 accessToken: null,
                 subscribed: null,
-                videoIdInput: null,
-                playlistIdInput: null,
+                videoUrlInput: null,
+                playlistUrlInput: null,
                 videoList: null,
                 titleAllInput: "",
                 artistAllInput: "",
                 albumAllInput: "",
                 dateAllInput: "",
                 status: null,
-                downloadFileLink: "#"
+                downloadFileLink: "#",
+                selectedVideos: []
             }
         },
         created() {
@@ -242,9 +266,57 @@
             }, 2000)
         },
         methods: {
+            // DOM
             parseTime(s) {
                 return new Date(s).toDateString()
             },
+
+            updateSelectedList(videoId) {
+
+                let i = this.selectedVideos.indexOf(videoId);
+                if (i > -1) {
+                    this.removeVideoFromSelectedList(videoId)
+                } else {
+                    this.addVideoToSelectedList(videoId)
+                }
+            },
+
+            addVideoToSelectedList(videoId) {
+                let i = this.selectedVideos.indexOf(videoId);
+                if (i > -1) {
+                    // already in list
+                    return
+                }
+
+                let row = document.getElementById(videoId);
+                this.selectedVideos.push(videoId);
+                row.style.backgroundColor = "darkslategray";
+            },
+
+            removeVideoFromSelectedList(videoId) {
+                let i = this.selectedVideos.indexOf(videoId);
+                if (i > -1) {
+                    let row = document.getElementById(videoId);
+                    this.selectedVideos.splice(i, 1);
+                    row.style.backgroundColor = "black";
+                }
+
+                // not in list
+            },
+
+            selectAll() {
+                for (let i = 0; i < this.videoList.length; i++) {
+                    this.addVideoToSelectedList(this.videoList[i].VideoId)
+                }
+            },
+
+            deselectAll() {
+                for (let i = 0; i < this.videoList.length; i++) {
+                    this.removeVideoFromSelectedList(this.videoList[i].VideoId)
+                }
+            },
+
+            // API
             getSub() {
                 let self = this;
                 this.apiService.getSub(this.apiName)
@@ -259,7 +331,7 @@
                             self.service = new ytdlService({
                                 Authorization: jwt,
                                 "X-Access-Token": self.accessToken
-                            }, `https://${hostname}`);
+                            }, `${config.apiScheme}://${hostname}`);
                             self.getVideoList();
                             self.getStatus();
 
@@ -291,7 +363,21 @@
             },
             addVideo() {
                 let self = this;
-                this.service.addVideo(this.videoIdInput)
+                let u = new URL(this.videoUrlInput);
+                let videoId = "";
+                if (u.host === "www.youtube.com") {
+                    let p = new URLSearchParams(u.search);
+                    videoId = p.get("v");
+                } else {
+                    videoId = u.pathname.slice(1)
+                }
+
+                if (!videoId) {
+                    self.logger.error("invalid video URL");
+                    return
+                }
+
+                this.service.addVideo(videoId)
                     .then(function() {
                         self.getVideoList();
                         self.logger.info("video added");
@@ -302,7 +388,15 @@
             },
             addPlaylist() {
                 let self = this;
-                this.service.addPlaylist(this.playlistIdInput)
+                let u = new URL(this.playlistUrlInput);
+                let p = new URLSearchParams(u.search);
+                let playlistId = p.get("list");
+                if (!playlistId) {
+                    self.logger.error("invalid playlist URL");
+                    return
+                }
+
+                this.service.addPlaylist(playlistId)
                     .then(function() {
                         self.getVideoList();
                         self.logger.info("playlist added");
@@ -317,10 +411,12 @@
                     this.titleAllInput,
                     this.artistAllInput,
                     this.albumAllInput,
-                    this.dateAllInput
+                    this.dateAllInput,
+                    this.selectedVideos
                 )
                 .then(function() {
                     self.getVideoList();
+                    self.deselectAll();
                     self.logger.info("list updated");
                 })
                 .catch(function(error) {
@@ -329,9 +425,10 @@
             },
             deleteAll() {
                 let self = this;
-                this.service.deleteAll()
+                this.service.deleteAll(this.selectedVideos)
                     .then(function() {
                         self.getVideoList();
+                        self.deselectAll();
                         self.logger.info("all videos removed");
                     })
                     .catch(function(error) {
@@ -392,15 +489,6 @@
 </script>
 
 <style scoped>
-    .sep {
-        padding: 15px;
-        border-bottom: solid 1px white;
-    }
-
-    .sep-borderless {
-        padding: 15px;
-    }
-
     .video-link {
         text-transform: uppercase;
         color: white;
@@ -412,18 +500,28 @@
         text-decoration: none;
     }
 
-    .video-list {
-        height: 70%;
-        overflow: auto;
-        max-height: 415px;
-    }
-
     .card-text {
         margin: 15px;
+        text-align: center;
     }
 
     .status-message {
         text-transform: uppercase;
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .row {
+        padding: 15px;
+    }
+
+    .card-prepend {
+        background-color: black;
+        width: 100px;
     }
 
 </style>
