@@ -15,5 +15,6 @@
   "jwt": {
     "tokenKey": "session_token"
   },
-  "apiHost": "{{API_HOST}}"
+  "apiHost": "{{API_HOST}}",
+  "apiScheme": "https"
 }
