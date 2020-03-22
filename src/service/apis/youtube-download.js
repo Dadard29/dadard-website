@@ -142,11 +142,7 @@ export default class YoutubeDownloadService {
                 return window.URL.createObjectURL(new Blob([response.data]));
             })
             .catch(function(error) {
-                if (error.response) {
-                    throw error.response.data.Message
-                } else {
-                    throw error
-                }
+                throw error.response.data
             })
     }
 

@@ -36,7 +36,7 @@ export default class ApiService {
 
     getInfos(hostname, isStandard) {
         if (isStandard) {
-            return this.service.get(`${config.apiScheme}://${hostname}${this.routes.infos}`)
+            return this.service.get(`${hostname}${this.routes.infos}`)
                 .then(function(response) {
                     return response.data
                 })
@@ -49,7 +49,7 @@ export default class ApiService {
 
     getStatus(hostname, isStandard) {
         if (isStandard) {
-            return this.service.get(`${config.apiScheme}://${hostname}${this.routes.health}`)
+            return this.service.get(`${hostname}${this.routes.health}`)
                 .then(function(response) {
                     return response.data.Status
                 })
