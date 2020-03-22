@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid" style="padding: 30px">
+        <div class="container-fluid" style="padding: 30px; max-height: 650px; overflow: auto">
 <!--            list view-->
             <div v-if="listView">
                 <table class="table">

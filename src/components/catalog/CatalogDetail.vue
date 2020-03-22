@@ -5,9 +5,9 @@
                 <img :src="apiObject.IconUrl" class="api-icon"> {{apiObject.Name}}
             </h3>
             <div class="container-fluid" style="padding-left: 70px">
-                <div class="row main-row align-items-center" >
+                <div class="row main-row" >
 <!--                    status + infos-->
-                    <div class="col-sm" style="border-right: solid 1px white">
+                    <div class="col-sm">
                         <div>
                             <div class="row">
                                 <span v-if="status === true" class="valid big">
@@ -114,8 +114,8 @@
                     </div>
                 </div>
 
-                <div class="row main-row">
-                    <div class="col-sm" style="border-right: solid 1px white">
+                <div class="row main-row align-items-center" style="border-bottom: solid 1px white">
+                    <div class="col-sm">
 <!--                        docs-->
                         <div class="row align-items-center">
                             <div class="col-sm text-muted">
