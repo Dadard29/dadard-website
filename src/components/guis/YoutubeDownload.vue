@@ -327,11 +327,9 @@
 
                             self.accessToken = data.Content.AccessToken;
                             const hostname = data.Content.Api.Hostname;
-                            const jwt = localStorage.getItem(config.jwt.tokenKey);
                             self.service = new ytdlService({
-                                Authorization: jwt,
                                 "X-Access-Token": self.accessToken
-                            }, `${config.apiScheme}://${hostname}`);
+                            }, `${hostname}`);
                             self.getVideoList();
                             self.getStatus();
 
@@ -471,8 +469,14 @@
                         link.href = url;
                         link.click();
                     })
-                    .catch(function(error) {
-                        self.logger.error(error);
+                    .catch(function(data) {
+                        console.log(data);
+                        const reader = new FileReader();
+                        reader.addEventListener('loadend', (e) => {
+                            const j = e.srcElement.result;
+                            self.logger.error(JSON.parse(j).Message)
+                        });
+                        reader.readAsText(data)
                     })
             },
             animateProgressBar() {
