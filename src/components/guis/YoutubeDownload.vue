@@ -329,7 +329,7 @@
                             const hostname = data.Content.Api.Hostname;
                             self.service = new ytdlService({
                                 "X-Access-Token": self.accessToken
-                            }, `${hostname}`);
+                            }, hostname);
                             self.getVideoList();
                             self.getStatus();
 
