@@ -5,7 +5,7 @@
             <h3>Catalog</h3>
         </div>
 <!--        inputs-->
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding: 20px">
             <div class="row">
                 <div class="col-sm">
                     <button v-on:click="refresh" class="btn btn-outline-primary widget-button">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid" style="padding: 30px; max-height: 650px; overflow: auto">
+        <div class="container-fluid" style="padding: 30px; max-height: 650px; overflow: auto; border-top: solid 1px white; border-bottom: solid 1px white">
 <!--            list view-->
             <div v-if="listView">
                 <table class="table">

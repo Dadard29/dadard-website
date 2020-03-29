@@ -116,29 +116,28 @@
 
                 <div class="row main-row align-items-center" style="border-bottom: solid 1px white">
                     <div class="col-sm">
-<!--                        docs-->
-                        <div class="row align-items-center">
-                            <div class="col-sm text-muted">
-                                documentation
-                            </div>
+                        <div class="row">
                             <div class="col-sm">
-                                <a :href="apiObject.DocumentationUrl" target="_blank"><img src="../../assets/icons/book.png" class="icon-link"></a>
+                                <a :href="apiObject.DocumentationUrl" target="_blank" class="icon-link-container">
+                                    <img src="../../assets/icons/book.png" class="icon-link">
+                                    Documentation
+                                </a>
                             </div>
                         </div>
-                        <div class="row align-items-center">
-                            <div class="col-sm text-muted">
-                                VCS
-                            </div>
+                        <div class="row">
                             <div class="col-sm">
-                                <a :href="apiObject.VCSUrl" target="_blank"><img src="../../assets/icons/git.png" class="icon-link"></a>
+                                <a :href="apiObject.VCSUrl" target="_blank" class="icon-link-container">
+                                    <img src="../../assets/icons/git.png" class="icon-link">
+                                    VCS
+                                </a>
                             </div>
                         </div>
-                        <div class="row align-items-center">
-                            <div class="col-sm text-muted">
-                                CI
-                            </div>
+                        <div class="row">
                             <div class="col-sm">
-                                <a :href="apiObject.BuildUrl" target="_blank"><img src="../../assets/icons/build.png" class="icon-link"></a>
+                                <a :href="apiObject.BuildUrl" target="_blank" class="icon-link-container">
+                                    <img src="../../assets/icons/build.png" class="icon-link">
+                                    Continuous Integration
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -302,15 +301,24 @@
         padding: 5px;
     }
 
-    .icon-link {
-        height: 32px;
-        padding: 3px;
+    .icon-link-container {
         border: solid 1px grey;
         border-radius: 16px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        padding-right: 16px;
+        text-decoration: none;
+        font-size: 24px;
+        transition: 0.25s;
     }
 
-    .icon-link:hover {
+    .icon-link-container:hover {
         background-color: grey;
-        border: solid 2px white;
+        color: white;
+    }
+
+    .icon-link {
+        height: 64px;
+        padding: 3px;
     }
 </style>
