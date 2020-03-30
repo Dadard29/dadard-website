@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <h3>About</h3>
+        <h3 id="generalities">Generalities</h3>
         <p>
             This website gives you access to Web REST APIS, so you can automate stuff.
         </p>
@@ -10,7 +10,13 @@
         <p>
             The APIs' documentations are published with <a href="https://postman.com">Postman</a>
         </p>
-        <h3>Resources</h3>
+        <h3 id="">Personal data</h3>
+        <p>
+            I do not sell any data. The source code of my service is all
+            <a href="https://github.com/Dadard29" target="_blank">public</a>.
+            You can freely check it out.
+        </p>
+        <h3 id="resources">Resources</h3>
         <p>
             The APIs are written in <a href="https://golang.org">Go</a>.
             I use <a href="https://podman.io">Podman</a> to manage the APIs runtime.
@@ -31,5 +37,8 @@
 </script>
 
 <style scoped>
+    p {
+        padding-left: 15px;
+    }
 
 </style>
