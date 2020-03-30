@@ -110,6 +110,14 @@
                                     {{parseTime(subscription.DateSubscribed)}}
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm text-muted">
+                                    requests count
+                                </div>
+                                <div class="col-sm">
+                                    {{subscription.RequestCount}}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,23 +125,19 @@
                 <div class="row main-row align-items-center" style="border-bottom: solid 1px white">
                     <div class="col-sm">
                         <div class="row">
-                            <div class="col-sm">
+                            <div class="col-" style="padding: 10px">
                                 <a :href="apiObject.DocumentationUrl" target="_blank" class="icon-link-container">
                                     <img src="../../assets/icons/book.png" class="icon-link">
                                     Documentation
                                 </a>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
+                            <div class="col-" style="padding: 10px">
                                 <a :href="apiObject.VCSUrl" target="_blank" class="icon-link-container">
                                     <img src="../../assets/icons/git.png" class="icon-link">
                                     VCS
                                 </a>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
+                            <div class="col-" style="padding: 10px">
                                 <a :href="apiObject.BuildUrl" target="_blank" class="icon-link-container">
                                     <img src="../../assets/icons/build.png" class="icon-link">
                                     Continuous Integration
@@ -308,7 +312,7 @@
         padding-bottom: 16px;
         padding-right: 16px;
         text-decoration: none;
-        font-size: 24px;
+        font-size: 16px;
         transition: 0.25s;
     }
 
@@ -318,7 +322,7 @@
     }
 
     .icon-link {
-        height: 64px;
-        padding: 3px;
+        height: 48px;
+        padding: 5px;
     }
 </style>
