@@ -51,7 +51,8 @@ export default {
       this.profile = new Profile(
               profile.ProfileKey,
               profile.Username,
-              profile.DateCreated
+              profile.DateCreated,
+              profile.Silver,
       );
     },
     disconnect: function() {

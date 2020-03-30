@@ -2,7 +2,9 @@
     <div>
         <div v-if="profile">
             <div class="container-fluid">
-                <h3>Profile</h3>
+                <h3>
+                    Profile
+                </h3>
             </div>
             <div class="container-fluid" style="padding: 30px">
                 <div class="row">
@@ -32,6 +34,19 @@
                                 <button class="btn btn-outline-primary" v-on:click="copy(profile.ProfileKey)">Copy</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-2 text-muted">
+                        Silver
+                    </div>
+                    <div class="col-sm">
+                        <span v-if="profile.Silver">
+                            <img class="horizontal-silver-badge" src="../../assets/icons/hand_of_the_king_horizontal.png">
+                        </span>
+                        <span v-else class="text-muted">
+                            You are not a hand of the king
+                        </span>
                     </div>
                 </div>
             </div>
@@ -200,5 +215,9 @@
 </script>
 
 <style scoped>
+    .horizontal-silver-badge {
+        width: 128px;
+        /*padding-left: 30px;*/
+    }
 
 </style>

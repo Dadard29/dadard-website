@@ -30,6 +30,7 @@
         </div>
         <div>
             Logged as {{this.profile.Username}}
+            <img v-if="profile.Silver" class="silver-badge" src="../../assets/icons/hand_of_the_king.png">
             <button v-on:click="logOut" class="btn btn-outline-danger" style="margin-left: 30px">Log Out</button>
         </div>
     </nav>
@@ -55,7 +56,7 @@
 </script>
 
 <style>
-    .router-link-active {
-
+    .silver-badge {
+        height: 32px;
     }
 </style>
