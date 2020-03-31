@@ -346,7 +346,7 @@
                 this.service.getStatus()
                     .then(function(status) {
                         self.status = status;
-                        self.logger.debug(`download status: ${self.status.Message}`);
+                        self.logger.debug(`dl: ${self.status.Message}`);
                     })
                     .catch(function(error) {
                         self.logger.error(error);
@@ -356,7 +356,11 @@
                 let self = this;
                 this.service.getVideoList()
                     .then(function(videoList) {
-                        self.videoList = videoList
+                        self.videoList = videoList;
+                        self.logger.debug('video list retrieved');
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
                     })
             },
             addVideo() {
