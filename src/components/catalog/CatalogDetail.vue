@@ -115,7 +115,13 @@
                                     requests count
                                 </div>
                                 <div class="col-sm">
-                                    {{subscription.RequestCount}}
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped" role="progressbar"
+                                             aria-valuemin="0" :aria-valuemax="100"
+                                             :style="{width: getQuotaUsedPercent() + '%'}">
+                                        </div>
+                                    </div>
+                                    {{subscription.RequestCount}} / {{subscription.Quota}}
                                 </div>
                             </div>
                         </div>
@@ -195,6 +201,9 @@
             },
             parseTime(s) {
                 return new Date(s).toDateString()
+            },
+            getQuotaUsedPercent() {
+                return this.subscription.RequestCount * 100 / this.subscription.Quota
             },
             copy(id) {
                 const input = document.getElementById(id);
