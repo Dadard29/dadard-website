@@ -75,8 +75,20 @@
                     </td>
                     <td>
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped" role="progressbar"
-                                 aria-valuemin="0" :aria-valuemax="100"
+                            <div v-if="getQuotaUsedPercent(sub) === 100"
+                                 class="progress-bar bg-danger" role="progressbar"
+                                 aria-valuemin="0" :aria-valuemax="100" :aria-valuenow="getQuotaUsedPercent(sub)"
+                                 :style="{width: getQuotaUsedPercent(sub) + '%'}">
+
+                            </div>
+                            <div v-else-if="getQuotaUsedPercent(sub) < 80"
+                                 class="progress-bar bg-success" role="progressbar"
+                                 aria-valuemin="0" :aria-valuemax="100" :aria-valuenow="getQuotaUsedPercent(sub)"
+                                 :style="{width: getQuotaUsedPercent(sub) + '%'}">
+                            </div>
+                            <div v-else
+                                 class="progress-bar bg-warning" role="progressbar"
+                                 aria-valuemin="0" :aria-valuemax="100" :aria-valuenow="getQuotaUsedPercent(sub)"
                                  :style="{width: getQuotaUsedPercent(sub) + '%'}">
                             </div>
                         </div>
