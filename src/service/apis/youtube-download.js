@@ -7,6 +7,8 @@ export default class YoutubeDownloadService {
             baseURL: host
         });
 
+        this.host = host;
+
         this.routes = {
             videos: "/video",
             videosList: "/video/list",
@@ -134,16 +136,8 @@ export default class YoutubeDownloadService {
             })
     }
 
-    getFile() {
-        return this.service.get(this.routes.downloadFile, {
-            responseType: 'blob'
-        })
-            .then(function(response) {
-                return window.URL.createObjectURL(new Blob([response.data]));
-            })
-            .catch(function(error) {
-                throw error.response.data
-            })
+    getFileUrl(token) {
+        return `${this.host}${this.routes.downloadFile}?token=${token}`
     }
 
 }
