@@ -89,10 +89,11 @@
                                                 <button v-on:click="downloadAll" class="btn btn-outline-primary card-link">
                                                     Download all
                                                 </button>
-                                                <button v-on:click="getFile" class="btn btn-outline-primary card-link">
-                                                    Get ZIP file
-                                                </button>
-                                                <a :href="downloadFileLink" id="download-file-link" download="mp3_files.zip"></a>
+                                                <a class="card-link" :href="getFileUrl()" id="download-file-link" download="mp3_files.zip">
+                                                    <button class="btn btn-outline-primary">
+                                                        Get ZIP file
+                                                    </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -465,23 +466,8 @@
                     }
                 }, 2000)
             },
-            getFile() {
-                let self = this;
-                this.service.getFile()
-                    .then(function(url) {
-                        const link = document.getElementById('download-file-link');
-                        link.href = url;
-                        link.click();
-                    })
-                    .catch(function(data) {
-                        console.log(data);
-                        const reader = new FileReader();
-                        reader.addEventListener('loadend', (e) => {
-                            const j = e.srcElement.result;
-                            self.logger.error(JSON.parse(j).Message)
-                        });
-                        reader.readAsText(data)
-                    })
+            getFileUrl() {
+                return this.service.getFileUrl(this.accessToken);
             },
             animateProgressBar() {
                 let p = document.getElementById("download-progress-bar");
