@@ -42,7 +42,14 @@
                     </div>
                     <div class="col-sm">
                         <span v-if="profile.Silver">
-                            <img class="horizontal-silver-badge" src="../../assets/icons/hand_of_the_king_horizontal.png">
+                            <h5>
+                            <div class="badge badge-secondary" style="background-color: #c0c0c0">
+                                Silver activated
+                            </div>
+                            <span style="padding-left: 15px">
+                                <img style="height: 64px" src="../../assets/icons/hand_of_the_king.png">
+                            </span>
+                        </h5>
                         </span>
                         <span v-else class="text-muted">
                             You are not a hand of the king
