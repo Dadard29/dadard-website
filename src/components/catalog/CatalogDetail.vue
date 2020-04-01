@@ -3,6 +3,10 @@
         <div v-if="apiObject">
             <h3 class="api-title">
                 <img :src="apiObject.IconUrl" class="api-icon"> {{apiObject.Name}}
+                <span v-if="apiObject.Restricted" class="text-muted" style="font-weight: normal">
+                    |
+                    restricted
+                </span>
             </h3>
             <div class="container-fluid" style="padding-left: 70px">
                 <div class="row main-row" >
@@ -73,55 +77,61 @@
 
 <!--                    sub-->
                     <div class="col-sm">
-                        <div v-if="!subscription">
+<!--                        check rights-->
+                        <div v-if="apiObject.Restricted === true && profile.Silver === false">
+                            You do not have access to restricted APIs
+                        </div>
+                        <div v-else>
+                            <div v-if="!subscription">
                             <span class="invalid big">
                                 <img src="../../assets/icons/invalid.png" class="icon-big"> NOT SUBSCRIBED
                                 <button class="btn btn-outline-primary" v-on:click="subscribe">
                                     subscribe
                                 </button>
                             </span>
-                        </div>
-                        <div v-else>
+                            </div>
+                            <div v-else>
                             <span class="valid big">
                                 <img src="../../assets/icons/valid.png" class="icon-big"> SUBSCRIBED
                                 <button class="btn btn-outline-primary" v-on:click="unsubscribe">
                                     unsubscribe
                                 </button>
                             </span>
-                            <!--                                sub details-->
-                            <div class="row" >
-                                <div class="col-sm text-muted">
-                                    access token
-                                </div>
-                                <div class="col-sm">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" :id="subscription.AccessToken" :value="subscription.AccessToken" readonly>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-primary" v-on:click="copy(subscription.AccessToken)">Copy</button>
+                                <!--                                sub details-->
+                                <div class="row" >
+                                    <div class="col-sm text-muted">
+                                        access token
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" :id="subscription.AccessToken" :value="subscription.AccessToken" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-primary" v-on:click="copy(subscription.AccessToken)">Copy</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm text-muted">
-                                    subscribed at
-                                </div>
-                                <div class="col-sm">
-                                    {{parseTime(subscription.DateSubscribed)}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm text-muted">
-                                    requests count
-                                </div>
-                                <div class="col-sm">
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped" role="progressbar"
-                                             aria-valuemin="0" :aria-valuemax="100"
-                                             :style="{width: getQuotaUsedPercent() + '%'}">
-                                        </div>
+                                <div class="row">
+                                    <div class="col-sm text-muted">
+                                        subscribed at
                                     </div>
-                                    {{subscription.RequestCount}} / {{subscription.Quota}}
+                                    <div class="col-sm">
+                                        {{parseTime(subscription.DateSubscribed)}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm text-muted">
+                                        requests count
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped" role="progressbar"
+                                                 aria-valuemin="0" :aria-valuemax="100"
+                                                 :style="{width: getQuotaUsedPercent() + '%'}">
+                                            </div>
+                                        </div>
+                                        {{subscription.RequestCount}} / {{subscription.Quota}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +180,7 @@
     const config = require('../../assets/config.json');
     const apiService = require('../../service/apiService').default;
     const subService = require('../../service/subService').default;
+    const profileService = require('@/service/profileService').default;
 
     export default {
         name: "CatalogDetail",
@@ -183,6 +194,10 @@
                 status: null,
                 subscription: null,
                 infos: null,
+                profile: null,
+                service: null,
+                subService: null,
+                profileService: null
             }
         },
         created() {
@@ -193,6 +208,8 @@
             };
             this.service = new apiService(headers);
             this.subService = new subService(headers);
+            this.profileService = new profileService({});
+            this.getProfile(token);
             this.fetchApiDetail();
         },
         methods: {
@@ -209,6 +226,13 @@
                 const input = document.getElementById(id);
                 input.select();
                 document.execCommand('copy');
+            },
+            getProfile(jwt) {
+                let self = this;
+                this.profileService.getProfile(jwt)
+                    .then(function(profile) {
+                        self.profile = profile;
+                    });
             },
             subscribe() {
                 let self = this;

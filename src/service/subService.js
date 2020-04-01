@@ -23,7 +23,11 @@ export default class SubService {
                 return response.data.Content
             })
             .catch(function(error) {
-                throw error
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
             })
     }
 
@@ -37,7 +41,11 @@ export default class SubService {
                 return response.data.Content
             })
             .catch(function(error) {
-                throw error
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
             })
     }
 
@@ -47,7 +55,11 @@ export default class SubService {
                 return response.data.Content;
             })
             .catch(function(error) {
-                throw error
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
             })
     }
 }

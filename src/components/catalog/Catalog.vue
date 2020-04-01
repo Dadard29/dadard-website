@@ -43,7 +43,7 @@
 <!--            list view-->
             <div v-if="listView">
                 <table class="table">
-                    <thead>
+                    <thead style="text-align: center">
                         <tr>
                             <th></th>
                             <th>Name</th>
@@ -55,9 +55,10 @@
                             <th>Created at</th>
                             <th>Subscription</th>
                             <th>Status</th>
+                            <th>Restricted</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="text-align: center">
                         <tr v-for="api in apiList" :key="api.Name">
                             <td><img :src="api.IconUrl" style="height: 24px" /></td>
                             <td><router-link :to="`/catalog/${api.Name}`" class="thumb-link">{{api.Name}}</router-link></td>
@@ -76,6 +77,9 @@
                                 <img v-if="api.Status === false" src="../../assets/icons/invalid.png" class="icon">
                                 <img v-if="api.Status === null" src="../../assets/icons/unknown.png" class="icon">
                             </td>
+                            <td>
+                                <img v-if="api.Restricted" src="../../assets/icons/lock.png" class="icon">
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -92,6 +96,10 @@
                                  -
                                 <span class="badge badge-success" v-if="api.IsSubscribed">Subscribed</span>
                                 <span class="badge badge-warning" v-else>Not subscribed</span>
+
+                                <span v-if="api.Restricted" style="position: absolute; right: 20px">
+                                    <img class="icon-small" src="../../assets/icons/lock.png">
+                                </span>
                             </div>
                             <div class="card-body">
                                 <router-link :to="`/catalog/${api.Name}`" class="thumb-link">
