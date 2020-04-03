@@ -9,6 +9,7 @@ export default class ProfileService {
         });
         this.routes = {
             profile: "/profile/auth",
+            profileConfirm: "/profile/auth/confirm",
             jwt: "profile/auth/jwt"
         }
     }
@@ -104,20 +105,45 @@ export default class ProfileService {
             })
     }
 
-    createProfile(username, password) {
+    sendCode(username, password, confirmationWay, contact) {
         return this.service.post(this.routes.profile, {}, {
+            params: {
+                confirm_by: confirmationWay,
+                contact: contact
+            },
             auth: {
                 username: username,
                 password: password
             }})
             .then(function(response) {
-                return response.data.Content
+                return response.data
             })
             .catch(function(error) {
                 if (error.response) {
                     throw error.response.data.Message;
                 } else {
                     throw error;
+                }
+            })
+    }
+
+    confirmCode(username, password, confirmationCode) {
+        return this.service.post(this.routes.profileConfirm, {}, {
+            params: {
+                confirmation_code: confirmationCode
+            },
+            auth: {
+                username: username,
+                password: password
+            }})
+            .then(function(response) {
+                return response.data
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
                 }
             })
     }
