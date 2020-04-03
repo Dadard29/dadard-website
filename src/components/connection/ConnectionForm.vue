@@ -1,104 +1,111 @@
 <template>
     <div>
         <div style="height: 400px">
-            <div v-if="displayMode === displayModeList.form">
-                <h3>Connection</h3>
-                <form class="form">
-                    <div class="form-group">
-                        <label for="usernameInput">Username</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text custom-input-prepend">@</div>
+            <transition name="fade">
+<!--                main form-->
+                <div v-if="displayMode === displayModeList.form">
+                    <h3>Connection</h3>
+                    <form class="form">
+                        <div class="form-group">
+                            <label for="usernameInput">Username</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend">@</div>
+                                </div>
+                                <input v-model="usernameInput" type="text" class="form-control custom-input" id="usernameInput" placeholder="Enter username" required>
                             </div>
-                            <input v-model="usernameInput" type="text" class="form-control custom-input" id="usernameInput" placeholder="Enter username" required>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordInput">Password</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text custom-input-prepend">#</div>
+                        <div class="form-group">
+                            <label for="passwordInput">Password</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend">#</div>
+                                </div>
+                                <input v-model="passwordInput" type="password" class="form-control custom-input" id="passwordInput" placeholder="Enter password" required>
                             </div>
-                            <input v-model="passwordInput" type="password" class="form-control custom-input" id="passwordInput" placeholder="Enter password" required>
                         </div>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button v-on:click="sendCodeMode" type="button" class="btn btn-outline-primary">Sign up</button>
-                        <button v-on:click="logIn" type="button" class="btn btn-outline-primary">Log in</button>
-                    </div>
-                </form>
-            </div>
-    <!--        send code-->
-            <div v-else-if="displayMode === displayModeList.sendCode">
-                <h3>Confirm identity</h3>
-                <form class="form">
-                    <div class="form-group">
-                        <label>
-                            Choose a way to contact you
-                            <select v-model="confirmationWayInput" class="custom-select">
-                                <option :value="confirmationWayList.telegram">Telegram</option>
-                                <option :value="confirmationWayList.email">Email</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div v-if="confirmationWayInput === confirmationWayList.telegram" class="form-group">
-                        <label for="contactInputTelegram">Telegram User ID</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text custom-input-prepend">@</div>
+                        <div class="btn-group" role="group">
+                            <button v-on:click="sendCodeMode" type="button" class="btn btn-outline-primary">Sign up</button>
+                            <button v-on:click="logIn" type="button" class="btn btn-outline-primary">Log in</button>
+                        </div>
+                    </form>
+                </div>
+            </transition>
+            <transition name="fade">
+        <!--        send code-->
+                <div v-if="displayMode === displayModeList.sendCode">
+                    <h3>Confirm identity</h3>
+                    <form class="form">
+                        <div class="form-group">
+                            <label>
+                                Choose a way to contact you
+                                <select v-model="confirmationWayInput" class="custom-select">
+                                    <option :value="confirmationWayList.telegram">Telegram</option>
+                                    <option :value="confirmationWayList.email">Email</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div v-if="confirmationWayInput === confirmationWayList.telegram" class="form-group">
+                            <label for="contactInputTelegram">Telegram User ID</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend">@</div>
+                                </div>
+                                <input v-model="contactInput" type="text" class="form-control custom-input" id="contactInputTelegram" placeholder="Enter your user ID" required>
                             </div>
-                            <input v-model="contactInput" type="text" class="form-control custom-input" id="contactInputTelegram" placeholder="Enter your user ID" required>
+                            <small>You can get your user ID by sending <code>/start</code> to the bot @userinfobot</small>
                         </div>
-                        <small>You can get your user ID by sending <code>/start</code> to the bot @userinfobot</small>
-                    </div>
-                    <div v-else-if="confirmationWayInput === confirmationWayList.email" class="form-group">
-                        <label for="contactInputEmail">Email</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text custom-input-prepend">@</div>
+                        <div v-else-if="confirmationWayInput === confirmationWayList.email" class="form-group">
+                            <label for="contactInputEmail">Email</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend">@</div>
+                                </div>
+                                <input v-model="contactInput" type="text" class="form-control custom-input" id="contactInputEmail" placeholder="Enter your email" required>
                             </div>
-                            <input v-model="contactInput" type="text" class="form-control custom-input" id="contactInputEmail" placeholder="Enter your email" required>
+                            <small>This address won't be shared, nor used except for confirming your identity</small>
                         </div>
-                        <small>This address won't be shared, nor used except for confirming your identity</small>
-                    </div>
-                    <p>
-                        You will receive a temporary code to the contact you specified.
-                    </p>
-                    <p>
-                        Those information are only use to confirm your identity as a human. They won't be stored.
-                    </p>
-                    <div class="btn-group" role="group">
-                        <button v-on:click="formMode" class="btn btn-outline-primary" type="button">&lt;&lt; Back</button>
-                        <button v-on:click="sendCode" class="btn btn-outline-primary" type="button">Send code</button>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button v-on:click="confirmCodeMode" class="btn btn-outline-primary"
-                                type="button" style="margin-left: 40px">
-                            Already have a confirmation code ?
-                        </button>
-                    </div>
-                </form>
-            </div>
-    <!--        confirm code-->
-            <div v-else-if="displayMode === displayModeList.confirmCode">
-                <h3>Confirm code</h3>
-                <form class="form">
-                    <div class="form-group">
-                        <label for="confirmationCode">Confirmation Code</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text custom-input-prepend">#</div>
+                        <p>
+                            You will receive a temporary code to the contact you specified.
+                        </p>
+                        <p>
+                            Those information are only use to confirm your identity as a human. They won't be stored.
+                        </p>
+                        <div class="btn-group" role="group">
+                            <button v-on:click="formMode" class="btn btn-outline-primary" type="button">&lt;&lt; Back</button>
+                            <button v-on:click="sendCode" class="btn btn-outline-primary" type="button">Send code</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button v-on:click="confirmCodeMode" class="btn btn-outline-primary"
+                                    type="button" style="margin-left: 40px">
+                                Already have a confirmation code ?
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </transition>
+            <transition name="fade">
+            <!--        confirm code-->
+                <div v-if="displayMode === displayModeList.confirmCode">
+                    <h3>Confirm code</h3>
+                    <form class="form">
+                        <div class="form-group">
+                            <label for="confirmationCode">Confirmation Code</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text custom-input-prepend">#</div>
+                                </div>
+                                <input v-model="confirmationCodeInput" type="text" style="font-size: 64px"
+                                       class="form-control custom-input" id="confirmationCode" placeholder="..." required>
                             </div>
-                            <input v-model="confirmationCodeInput" type="text" style="font-size: 64px"
-                                   class="form-control custom-input" id="confirmationCode" placeholder="..." required>
                         </div>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button v-on:click="sendCodeMode" class="btn btn-outline-primary" type="button">&lt;&lt; Back</button>
-                        <button v-on:click="confirmCode" class="btn btn-outline-primary" type="button">Confirm code</button>
-                    </div>
-                </form>
-            </div>
+                        <div class="btn-group" role="group">
+                            <button v-on:click="sendCodeMode" class="btn btn-outline-primary" type="button">&lt;&lt; Back</button>
+                            <button v-on:click="confirmCode" class="btn btn-outline-primary" type="button">Confirm code</button>
+                        </div>
+                    </form>
+                </div>
+            </transition>
         </div>
         <div>
             <Logger :logger-service="logger" />
@@ -120,6 +127,7 @@
         },
         data: function () {
           return {
+              show: false,
               // services
               service: null,
               logger: null,
@@ -268,4 +276,17 @@
         background-color: black;
         color: white;
     }
+
+    .fade-enter-active {
+        transition: opacity 0s;
+    }
+
+    .fade-enter-active {
+        transition: opacity 1s;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+
 </style>
