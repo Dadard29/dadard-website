@@ -22,6 +22,9 @@
                     <router-link to="/apis/youtube-download" class="dropdown-item">
                         Youtube Download
                     </router-link>
+                    <router-link to="/apis/music-researcher" class="dropdown-item">
+                        Music Researcher
+                    </router-link>
                 </div>
             </div>
             <router-link to="/about" class="nav-item nav-link" exact-active-class="active">

@@ -8,6 +8,7 @@ import CatalogDetail from "./components/catalog/CatalogDetail";
 import NotFound from "@/components/NotFound";
 import YoutubeDownload from "@/components/guis/YoutubeDownload";
 import About from "@/components/About";
+import MusicResearcher from "@/components/guis/MusicResearcher";
 
 Vue.config.productionTip = false;
 
@@ -19,6 +20,7 @@ const routes = [
   {path: "/catalog", component: Catalog},
   {path: "/catalog/:apiName", component: CatalogDetail},
   {path: "/apis/youtube-download", component: YoutubeDownload},
+  {path: "/apis/music-researcher", component: MusicResearcher},
   {path: "/about", component: About},
   {path: "/404", component: NotFound},
   {path: "*", redirect: "/404"}
