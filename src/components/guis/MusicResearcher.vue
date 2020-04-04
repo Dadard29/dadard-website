@@ -232,9 +232,11 @@
 
             searchYoutube(q) {
                 let self = this;
+                self.loadingYoutube = true;
                 this.service.searchYoutube(q)
                     .then(function(results) {
                         self.youtubeResults = results;
+                        self.loadingYoutube = false;
                     })
                     .catch(function(error) {
                         self.logger.error(error)
@@ -243,9 +245,11 @@
 
             searchSpotify(q) {
                 let self = this;
+                self.loadingSpotify = true;
                 this.service.searchSpotify(q)
                     .then(function(results) {
                         self.spotifyResults = results;
+                        self.loadingSpotify = false;
                     })
                     .catch(function(error) {
                         self.logger.error(error)
