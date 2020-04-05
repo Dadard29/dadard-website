@@ -76,7 +76,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text custom-input-prepend">#</div>
                                     </div>
-                                    <input v-model="inputPassword" type="password" class="form-control custom-input" id="password" placeholder="Enter your password" required>
+                                    <input v-model="passwordInput" type="password" class="form-control custom-input" id="password" placeholder="Enter your password" required>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                 logger: null,
                 profile: null,
                 service: null,
-                inputPassword: null,
+                passwordInput: null,
                 newPassword: null,
                 newPasswordConfirm: null,
                 usernameInput: null,
@@ -187,7 +187,7 @@
                     return
                 }
 
-                this.service.changePassword(this.profile.Username, this.inputPassword, this.newPassword)
+                this.service.changePassword(this.profile.Username, this.passwordInput, this.newPassword)
                     .then(function() {
                         self.logger.info("password updated")
                     })
@@ -198,17 +198,12 @@
             deleteProfile() {
                 let self = this;
 
-                if (this.newPassword !== this.newPasswordConfirm) {
-                    self.logger.error("password mismatch");
-                    return
-                }
-
                 if (this.usernameInput !== this.profile.Username) {
                     self.logger.error("username mismatch");
                     return
                 }
 
-                this.service.deleteProfile()
+                this.service.deleteProfile(this.usernameInput, this.passwordInput)
                     .then(function() {
                         self.logger.info("profile deleted")
                     })

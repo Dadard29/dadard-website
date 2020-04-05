@@ -16,8 +16,8 @@
             </div>
             <div class="row">
                 <div class="col-sm stat">
-                    <span class="stat-number">{{subsList.length}}</span>
-                    subscriptions
+                    <span class="stat-number">{{subsList.length}}/{{totalApis}}</span>
+                    APIs subscribed
                 </div>
                 <div class="col-sm stat">
                     <div v-if="profile == null" class="spinner-border text-primary" role="status">
@@ -120,6 +120,7 @@
                 subsList: [],
                 totalRequestCount: 0,
                 totalApisUp: 0,
+                totalApis:0,
                 profile: null
             }
         },
@@ -133,6 +134,7 @@
             this.apiService = new apiService(headers);
             this.profileService = new profileService({});
             this.fetchSubs();
+            this.getApiList();
             this.getProfile(token);
         },
         methods: {
@@ -171,6 +173,13 @@
                                 })
 
                         }
+                    })
+            },
+            getApiList() {
+                let self = this;
+                this.apiService.getApiList()
+                    .then(function(l) {
+                        self.totalApis = l.length;
                     })
             }
         }

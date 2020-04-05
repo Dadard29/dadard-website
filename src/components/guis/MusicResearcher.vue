@@ -123,7 +123,7 @@
                                     </span>
                                 </div>
                                 <div class="row no-gutters">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" style="padding-left: 20px">
                                         <img :src="r.ImageURL" style="width: 135px" class="card-img" alt="video_thumb">
                                     </div>
                                     <div class="col-md-8">
@@ -239,7 +239,8 @@
                         self.loadingYoutube = false;
                     })
                     .catch(function(error) {
-                        self.logger.error(error)
+                        self.logger.error(error);
+                        self.loadingYoutube = false;
                     })
             },
 
@@ -252,7 +253,8 @@
                         self.loadingSpotify = false;
                     })
                     .catch(function(error) {
-                        self.logger.error(error)
+                        self.logger.error(error);
+                        self.loadingSpotify = false;
                     })
             },
 
