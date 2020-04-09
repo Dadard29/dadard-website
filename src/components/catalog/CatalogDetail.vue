@@ -93,8 +93,8 @@
                             <div v-else>
                             <span class="valid big">
                                 <img src="../../assets/icons/valid.png" class="icon-big"> SUBSCRIBED
-                                <button class="btn btn-outline-primary" v-on:click="unsubscribe">
-                                    unsubscribe
+                                <button class="btn btn-outline-primary" v-on:click="regenerate">
+                                    regenerate token
                                 </button>
                             </span>
                                 <!--                                sub details-->
@@ -245,15 +245,26 @@
                         self.logger.error(error);
                     })
             },
-            unsubscribe() {
+            regenerate() {
                 let self = this;
-                this.subService.unsubscribe(this.apiObject.Name)
+                this.subService.regenerate(this.apiObject.Name)
                     .then(function() {
                         self.subscription = null;
-                        self.logger.info("unsubscribed successfully");
+                        self.logger.info("token regenerated successfully");
+                        self.getSub(self.apiObject.Name);
                     })
                     .catch(function(error) {
                         self.logger.error(error);
+                    })
+            },
+            getSub(apiName) {
+                let self = this;
+                this.service.getSub(apiName)
+                    .then(function(sub) {
+                        self.logger.debug("subscription status retrieved");
+                        if (sub.Status === true) {
+                            self.subscription = sub.Content;
+                        }
                     })
             },
             fetchApiDetail() {
@@ -267,13 +278,7 @@
                     .then(function(status) {
                         self.logger.debug("api status retrieved");
                         self.status = status;
-                        return self.service.getSub(self.apiObject.Name)
-                    })
-                    .then(function(sub) {
-                        self.logger.debug("subscription status retrieved");
-                        if (sub.Status === true) {
-                            self.subscription = sub.Content;
-                        }
+                        self.getSub(self.apiObject.Name);
 
                         if (self.status) {
                             return self.service.getInfos(
@@ -281,6 +286,7 @@
                                 self.apiObject.IsStandard
                             )
                         }
+
                     })
                     .then(function(infos) {
                         self.logger.debug("api infos retrieved");

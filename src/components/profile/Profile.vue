@@ -63,13 +63,12 @@
         </div>
 
         <div class="container-fluid">
-            <div class="row align-items-center" style="border-top: solid 1px white; border-bottom: solid 1px white; padding:15px">
-                <div class="col-sm" style="border-right: solid 1px white">
+            <div class="row" style="border-top: solid 1px white; border-bottom: solid 1px white; padding:15px">
+                <div class="col-8" style="border-right: solid 1px white">
 
 <!--                    confirmation password-->
                     <div class="row align-items-center">
                         <div class="col-sm">
-                            <h4 style="color: red">Danger zone</h4>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <div class="input-group mb-2">
@@ -79,52 +78,113 @@
                                     <input v-model="passwordInput" type="password" class="form-control custom-input" id="password" placeholder="Enter your password" required>
                                 </div>
                             </div>
+
+                            <div style="text-align: center">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-outline-primary active" v-on:click="setDangerZone()">
+                                        <input type="radio" name="filter" id="subs" autocomplete="off" > Danger zone
+                                    </label>
+                                    <label class="btn btn-outline-primary" v-on:click="setRecoverySettings()">
+                                        <input type="radio" name="filter" id="unsubs" autocomplete="off" > Recovery settings
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row align-items-center">
-<!--                        change password-->
-                        <div class="col-sm" style="border-right: solid 1px white">
-                            <div class="form-group">
-                                <label for="newPassword">New password</label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text custom-input-prepend">#1</div>
-                                    </div>
-                                    <input v-model="newPassword" type="password" class="form-control custom-input" id="newPassword" placeholder="Enter your new password" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="newPasswordConfirm">Confirm</label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text custom-input-prepend">#2</div>
-                                    </div>
-                                    <input v-model="newPasswordConfirm" type="password" class="form-control custom-input" id="newPasswordConfirm" placeholder="Confirm your new password" required>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-outline-warning" v-on:click="changePassword">Change password</button>
+<!--                    // danger zone-->
+                    <div v-if="this.tab === this.dangerZone" style="margin-top: 20px">
+                        <div class="row">
+                            <h4 style="color: red">Danger zone</h4>
                         </div>
-
-<!--                        delete profile-->
-                        <div class="col-sm">
-                            <div class="form-group">
-                                <label for="usernameInput">Confirm your username</label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text custom-input-prepend">@</div>
+                        <div class="row align-items-center">
+    <!--                        change password-->
+                            <div class="col-sm" style="border-right: solid 1px white">
+                                <div class="form-group">
+                                    <label for="newPassword">New password</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text custom-input-prepend">#1</div>
+                                        </div>
+                                        <input v-model="newPassword" type="password" class="form-control custom-input" id="newPassword" placeholder="Enter your new password" required>
                                     </div>
-                                    <input v-model="usernameInput" type="text" class="form-control custom-input" id="usernameInput" placeholder="Confirm your username" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="newPasswordConfirm">Confirm</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text custom-input-prepend">#2</div>
+                                        </div>
+                                        <input v-model="newPasswordConfirm" type="password" class="form-control custom-input" id="newPasswordConfirm" placeholder="Confirm your new password" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="text-align: right">
+                                    <button class="btn btn-outline-warning" v-on:click="changePassword">Change password</button>
                                 </div>
                             </div>
 
-                            <button class="btn btn-outline-danger" v-on:click="deleteProfile">Delete profile</button>
+    <!--                        delete profile-->
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label for="usernameInput">Confirm your username</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text custom-input-prepend">@</div>
+                                        </div>
+                                        <input v-model="usernameInput" type="text" class="form-control custom-input" id="usernameInput" placeholder="Confirm your username" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="text-align: right">
+                                    <button class="btn btn-outline-danger" v-on:click="deleteProfile">Delete profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+<!--                    // recovery settings-->
+                    <div v-if="this.tab === this.recoverySettings" style="margin-top: 20px">
+                        <div class="row">
+                            <h4 style="color: orange">Recovery settings</h4>
+                        </div>
+                        <small v-if="noRecovery">You currently do not have recovery settings: if you lose your password, you're screwed</small>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="recoveryBy">Recover by</label>
+                                    <select @change="needToUpdate = true" v-model="profile.RecoverBy" id="recoveryBy" class="custom-select">
+                                        <option :value="recoverByList.telegram">Telegram</option>
+                                        <option :value="recoverByList.email">Email</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact">Contact</label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div @change="needToUpdate = true" class="input-group-text custom-input-prepend">@</div>
+                                        </div>
+                                        <input v-model="profile.Contact" type="text"
+                                               class="form-control custom-input" id="contact" required>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="text-align: right">
+                                    <span style="padding: 0 5px 0 5px">
+                                        <button @click="updateRecoverySettings" class="btn btn-outline-warning" :disabled="!needToUpdate">Update</button>
+                                    </span>
+                                    <span style="padding: 0 5px 0 5px">
+                                        <button @click="testRecoverySettings" class="btn btn-outline-primary" :disabled="needToUpdate">Test</button>
+                                    </span>
+                                    <span style="padding: 0 5px 0 5px">
+                                        <button @click="deleteRecoverySettings" class="btn btn-outline-danger">Remove</button>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm">
+                <div class="col">
                     <Logger :logger-service="logger"></Logger>
                 </div>
             </div>
@@ -151,14 +211,28 @@
                 newPassword: null,
                 newPasswordConfirm: null,
                 usernameInput: null,
-                jwt: null
+                jwt: null,
+
+
+                noRecovery: true,
+                recoverByList: {
+                    telegram: "telegram",
+                    email: "email"
+                },
+
+                // dom
+                dangerZone: "dangerZone",
+                recoverySettings: "recoverySettings",
+                tab: "",
+                needToUpdate: false
             }
         },
         created() {
             this.logger = new LoggerService();
             this.jwt = localStorage.getItem(config.jwt.tokenKey);
             this.service = new profileService({});
-            this.getProfile()
+            this.getProfile();
+            this.setDangerZone();
         },
         methods: {
             parseTime(s) {
@@ -174,6 +248,9 @@
                 this.service.getProfile(this.jwt)
                     .then(function(profile) {
                         self.profile = profile;
+
+                        self.noRecovery = !(profile.RecoverBy !== "" || profile.Contact !== "");
+                        self.logger.info("profile retrieved")
                     })
                     .catch(function(error){
                         self.logger.error(error)
@@ -210,6 +287,52 @@
                     .catch(function(error) {
                         self.logger.error(error);
                     })
+            },
+            updateRecoverySettings() {
+                let self = this;
+                this.service.updateRecoverySettings(this.profile.Username, this.passwordInput,
+                    this.profile.RecoverBy, this.profile.Contact)
+                    .then(function(msg) {
+                        self.logger.info(msg);
+
+                        self.getProfile();
+                        self.needToUpdate = false;
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error);
+                    })
+            },
+
+            testRecoverySettings() {
+                let self = this;
+                this.service.testRecoverySettings(this.profile.Username, this.passwordInput)
+                    .then(function(msg) {
+                        self.logger.info(msg);
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
+                    })
+            },
+
+            deleteRecoverySettings() {
+                let self = this;
+                this.service.deleteRecoverySettings(this.profile.Username, this.passwordInput)
+                    .then(function(msg) {
+                        self.logger.info(msg);
+
+                        self.getProfile()
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
+                    })
+            },
+
+            // dom
+            setDangerZone() {
+                this.tab = this.dangerZone;
+            },
+            setRecoverySettings() {
+                this.tab = this.recoverySettings;
             }
         }
 
@@ -220,6 +343,11 @@
     .horizontal-silver-badge {
         width: 128px;
         /*padding-left: 30px;*/
+    }
+
+    select {
+        background-color: black;
+        color: white;
     }
 
 </style>

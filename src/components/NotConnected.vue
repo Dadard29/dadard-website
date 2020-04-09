@@ -8,7 +8,7 @@
         <div class="verticalBar"></div>
       </div>
       <div class="col-lg">
-        <ConnectionForm @connect="connect"/>
+          <ConnectionForm @connect="connect"/>
       </div>
     </div>
   </div>
@@ -50,5 +50,6 @@
     position: absolute;
     height: 100%;
   }
+
 
 </style>

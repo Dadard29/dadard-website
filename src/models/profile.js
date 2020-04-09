@@ -10,4 +10,6 @@ export default class Profile {
     Username;
     DateCreated;
     Silver;
+    Contact;
+    RecoverBy;
 }

@@ -31,8 +31,8 @@ export default class SubService {
             })
     }
 
-    unsubscribe(apiName) {
-        return this.service.delete(this.routes.subs, {
+    regenerate(apiName) {
+        return this.service.put(this.routes.subs, {}, {
             params: {
                 apiName: apiName
             }

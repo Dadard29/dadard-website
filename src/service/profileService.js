@@ -10,7 +10,9 @@ export default class ProfileService {
         this.routes = {
             profile: "/profile/auth",
             profileConfirm: "/profile/auth/confirm",
-            jwt: "profile/auth/jwt"
+            jwt: "/profile/auth/jwt",
+            recoverySettings: "/profile/recovery/settings",
+            recovery: "/profile/recovery"
         }
     }
 
@@ -147,4 +149,106 @@ export default class ProfileService {
                 }
             })
     }
+
+    updateRecoverySettings(username, password, recoverBy, contact) {
+        return this.service.put(this.routes.recoverySettings, {}, {
+            params: {
+                recover_by: recoverBy,
+                contact: contact
+            },
+            auth: {
+                username: username,
+                password: password
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    testRecoverySettings(username, password) {
+        return this.service.get(this.routes.recoverySettings, {
+            auth: {
+                username: username,
+                password: password
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    deleteRecoverySettings(username, password) {
+        return this.service.delete(this.routes.recoverySettings, {
+            auth: {
+                username: username,
+                password: password
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    lostPasswordSendCode(username) {
+        return this.service.get(this.routes.recovery, {
+            params: {
+                username: username
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+    lostPasswordConfirmCode(username, password, code) {
+        return this.service.post(this.routes.recovery, {}, {
+            auth: {
+                username: username,
+                password: password
+            },
+            params: {
+                confirmation_code: code
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+
 }
