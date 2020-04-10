@@ -12,4 +12,5 @@ export default class Profile {
     Silver;
     Contact;
     RecoverBy;
+    BeNotified;
 }

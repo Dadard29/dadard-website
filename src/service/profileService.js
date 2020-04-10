@@ -12,7 +12,8 @@ export default class ProfileService {
             profileConfirm: "/profile/auth/confirm",
             jwt: "/profile/auth/jwt",
             recoverySettings: "/profile/recovery/settings",
-            recovery: "/profile/recovery"
+            recovery: "/profile/recovery",
+            notification: "/profile/notification"
         }
     }
 
@@ -236,6 +237,28 @@ export default class ProfileService {
             },
             params: {
                 confirmation_code: code
+            }
+        })
+            .then(function(response) {
+                return response.data.Message
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    updateNotificationSettings(username, password, beNotified) {
+        return this.service.post(this.routes.notification, {}, {
+            auth: {
+                username: username,
+                password: password
+            },
+            params: {
+                be_notified: beNotified
             }
         })
             .then(function(response) {

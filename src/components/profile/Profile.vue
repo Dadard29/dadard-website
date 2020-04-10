@@ -81,11 +81,14 @@
 
                             <div style="text-align: center">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-outline-primary active" v-on:click="setDangerZone()">
-                                        <input type="radio" name="filter" id="subs" autocomplete="off" > Danger zone
+                                    <label for="danger" class="btn btn-outline-primary active" v-on:click="setDangerZone()">
+                                        <input type="radio" name="filter" id="danger" autocomplete="off" > Danger zone
                                     </label>
-                                    <label class="btn btn-outline-primary" v-on:click="setRecoverySettings()">
-                                        <input type="radio" name="filter" id="unsubs" autocomplete="off" > Recovery settings
+                                    <label for="recovery" class="btn btn-outline-primary" v-on:click="setRecoverySettings()">
+                                        <input type="radio" name="filter" id="recovery" autocomplete="off" > Recovery settings
+                                    </label>
+                                    <label for="notif" class="btn btn-outline-primary" v-on:click="setNotificationSettings()">
+                                        <input type="radio" name="filter" id="notif" autocomplete="off" > Notifications
                                     </label>
                                 </div>
                             </div>
@@ -183,6 +186,37 @@
                             </div>
                         </div>
                     </div>
+
+                    <div v-if="this.tab === this.notificationSettings" style="margin-top: 20px">
+                        <div class="row">
+                            <h4 style="color: orange">Notification settings</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input v-model="profile.BeNotified" type="checkbox" class="custom-control-input" id="customCheck1">
+                                        <label class="custom-control-label" for="customCheck1">Receive notifications</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <p>
+                                        If checked, you will received notifications using the channel you specified in your recovery
+                                        settings.
+                                    </p>
+                                    <p>
+                                        The notification content will exclusively be informative. No ads, nor promotions or business stuff
+                                        will ever be sent.
+                                    </p>
+                                </div>
+
+                                <div class="form-group" style="text-align: right">
+                                    <button @click="updateNotificationSettings" class="btn btn-outline-warning">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
                     <Logger :logger-service="logger"></Logger>
@@ -223,6 +257,8 @@
                 // dom
                 dangerZone: "dangerZone",
                 recoverySettings: "recoverySettings",
+                notificationSettings: "notificationSettings",
+
                 tab: "",
                 needToUpdate: false
             }
@@ -327,12 +363,29 @@
                     })
             },
 
+            updateNotificationSettings() {
+                let self = this;
+                this.service.updateNotificationSettings(this.profile.Username, this.passwordInput,
+                                                            this.profile.BeNotified)
+                    .then(function(msg) {
+                        self.logger.info(msg);
+
+                        self.getProfile()
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
+                    })
+            },
+
             // dom
             setDangerZone() {
                 this.tab = this.dangerZone;
             },
             setRecoverySettings() {
                 this.tab = this.recoverySettings;
+            },
+            setNotificationSettings() {
+                this.tab = this.notificationSettings;
             }
         }
 
