@@ -1,8 +1,8 @@
 <template>
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark justify-content-between">
         <a class="navbar-brand">
-            <img src="../../assets/eddardStartPortrait.png" style="height: 50px">
-            Dadard Website
+<!--            <img src="../../assets/eddardStartPortrait.png" style="height: 50px">-->
+            <img src="../../assets/icons/title.png" style="height: 40px">.fr
         </a>
         <div class="navbar-nav">
             <router-link to="/" class="nav-item nav-link" exact-active-class="active">

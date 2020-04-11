@@ -1,38 +1,43 @@
 <template>
-    <div class="container-fluid ribbon">
-        <div v-if="retrieved">
-            <div class="row align-items-end">
-                <div class="col-lg text-left">
-                    <div class="row align-items-end">
-                        <div class="col- text-left">
-                            <img src="../assets/eddardStartPortrait.png" style="height: 50px">
+    <div>
+        <div class="container-fluid ribbon">
+            <div v-if="retrieved">
+                <div class="row align-items-end">
+                    <div class="col-lg text-left">
+                        <div class="row align-items-end">
+                            <div class="col- text-left">
+                                <img src="../assets/eddardStartPortrait.png" style="height: 50px">
+                            </div>
+                            <div class="col-lg text-left">
+                                <footer class="text-muted">
+                                    <cite title="Eddard Stark quote">"{{getQuote()}}"</cite>
+                                </footer>
+                            </div>
                         </div>
-                        <div class="col-lg text-left">
-                            <footer class="text-muted">
-                                <cite title="Eddard Stark quote">"{{getQuote()}}"</cite>
-                            </footer>
+                    </div>
+                    <div class="col-lg text-center">
+                        <div style="padding-bottom: 10px">
+                            <a style="padding: 5px" :href="ribbonLinks.githubProfile" target="_blank" ><img src="../assets/icons/github.png" width="32px"></a>
+                            <a style="padding: 5px" :href="ribbonLinks.gitlabProfile" target="_blank" ><img src="../assets/icons/gitlab.png" width="32px"></a>
+                            <a style="padding: 5px" :href="ribbonLinks.linkedinProfile" target="_blank" ><img src="../assets/icons/linkeding.png" width="32px"></a>
+                        </div>
+                        <div>
+                            Dadard Website - <a v-bind:href="infos.LicenseUrl" target="_blank">{{infos.License}}</a>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg text-center">
-                    <div style="padding-bottom: 10px">
-                        <a style="padding: 5px" :href="ribbonLinks.githubProfile" target="_blank" ><img src="../assets/icons/github.png" width="32px"></a>
-                        <a style="padding: 5px" :href="ribbonLinks.gitlabProfile" target="_blank" ><img src="../assets/icons/gitlab.png" width="32px"></a>
-                        <a style="padding: 5px" :href="ribbonLinks.linkedinProfile" target="_blank" ><img src="../assets/icons/linkeding.png" width="32px"></a>
+                    <div class="col-lg text-right text-muted">
+                        Front Version {{version}} -
+                        API Version {{infos.Version}} -
+                        <a style="padding: 5px" :href="ribbonLinks.reportIssue" target="_blank" >Report an issue</a>
                     </div>
-                    <div>
-                        Dadard Website - <a v-bind:href="infos.LicenseUrl" target="_blank">{{infos.License}}</a>
-                    </div>
-                </div>
-                <div class="col-lg text-right text-muted">
-                    Front Version {{version}} -
-                    API Version {{infos.Version}} -
-                    <a style="padding: 5px" :href="ribbonLinks.reportIssue" target="_blank" >Report an issue</a>
                 </div>
             </div>
+            <div v-else>
+                <span style="color: red">API down</span>
+            </div>
         </div>
-        <div v-else>
-            <span style="color: red">API down</span>
+        <div class="container-fluid bg-fire">
+            <img src="../assets/fire.webp">
         </div>
     </div>
 </template>
@@ -89,5 +94,12 @@
     .ribbon {
         position: fixed;
         bottom: 10px;
+    }
+
+    .bg-fire {
+        position: fixed;
+        z-index: -1;
+        bottom: -10px;
+        text-align: center;
     }
 </style>
