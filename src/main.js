@@ -10,13 +10,14 @@ import YoutubeDownload from "@/components/guis/YoutubeDownload";
 import About from "@/components/About";
 import MusicResearcher from "@/components/guis/MusicResearcher";
 import Thoughts from "@/components/guis/Thoughts";
+import HomeConnected from "@/components/home/HomeConnected";
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 
 const routes = [
-  {path: "/", component: Dashboard},
+  {path: "/", component: HomeConnected},
   {path: "/profile", component: Profile},
   {path: "/catalog", component: Catalog},
   {path: "/catalog/:apiName", component: CatalogDetail},
@@ -24,6 +25,7 @@ const routes = [
   {path: "/apis/music-researcher", component: MusicResearcher},
   {path: "/about", component: About},
   {path: "/pensées", component: Thoughts},
+  {path: "/dashboard", component: Dashboard},
   {path: "/404", component: NotFound},
   {path: "*", redirect: "/404"}
 ];

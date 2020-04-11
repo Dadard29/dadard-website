@@ -1,11 +1,11 @@
 <template>
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark justify-content-between">
-        <a class="navbar-brand">
+        <router-link to="/" class="navbar-brand">
 <!--            <img src="../../assets/eddardStartPortrait.png" style="height: 50px">-->
             <img src="../../assets/icons/title.png" style="height: 40px">.fr
-        </a>
+        </router-link>
         <div class="navbar-nav">
-            <router-link to="/" class="nav-item nav-link" exact-active-class="active">
+            <router-link to="/dashboard" class="nav-item nav-link" exact-active-class="active">
                 Dashboard
             </router-link>
             <router-link to="/profile" class="nav-item nav-link" exact-active-class="active">
