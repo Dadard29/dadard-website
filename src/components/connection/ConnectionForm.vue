@@ -57,7 +57,7 @@
                                 </div>
                                 <input v-model="contactInput" type="text" class="form-control custom-input" id="contactInputTelegram" placeholder="Enter your user ID" required>
                             </div>
-                            <small>You can get your user ID by sending <code>/start</code> to the bot @userinfobot</small>
+                            <small>You can get your user ID by sending <code>/id</code> to the bot @dadard29_bot</small>
                         </div>
                         <div v-else-if="confirmationWayInput === confirmationWayList.email" class="form-group">
                             <label for="contactInputEmail">Email</label>

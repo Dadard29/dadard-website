@@ -9,7 +9,14 @@
         </div>
         <div v-else class="container-fluid">
             <h3>Youtube Download</h3>
-            <div class="row">
+            <div style="padding: 5px; border-bottom: solid 1px white;">
+                <h4>
+                    <a @click="collapseToggle('toCollapse')" class="btn btn-outline-primary" data-toggle="collapse" href="#collapsePanel"
+                       id="toCollapse" role="button" aria-expanded="false" aria-controls="collapsePanel">✕</a>
+                    Status
+                </h4>
+            </div>
+            <div class="row collapse show" id="collapsePanel">
 
                 <div class="col">
 <!--                    add stuff-->
@@ -110,7 +117,15 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+
+            <div style="padding: 5px; border-bottom: solid 1px white">
+                <h4>
+                    <a @click="collapseToggle('toCollapse2')" class="btn btn-outline-primary" data-toggle="collapse" href="#collapsePanel2"
+                       id="toCollapse2" role="button" aria-expanded="false" aria-controls="collapsePanel">✕</a>
+                    Video list
+                </h4>
+            </div>
+            <div class="row collapse show" id="collapsePanel2">
                 <div class="col">
                     <h5>Update infos</h5>
                     <div class="card">
@@ -317,6 +332,17 @@
                 }
             },
 
+            collapseToggle(id) {
+                const showed = "✕";
+                const collapsed = "+";
+                let toCollapse = document.getElementById(id);
+                if (toCollapse.innerText === showed) {
+                    toCollapse.innerText = collapsed;
+                } else {
+                    toCollapse.innerText = showed;
+                }
+            },
+
             // API
             getSub() {
                 let self = this;
@@ -517,5 +543,10 @@
         background-color: black;
         width: 100px;
     }
+
+    .be-collapse {
+        border: solid 1px white;
+    }
+
 
 </style>
