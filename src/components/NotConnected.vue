@@ -20,9 +20,6 @@
 
   export default {
     name: 'NotConnected',
-    props: {
-      connected: Boolean
-    },
     components: {
       ConnectionForm,
       Home
