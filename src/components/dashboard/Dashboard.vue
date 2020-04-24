@@ -46,12 +46,12 @@
         <div class="container" style="padding: 30px">
             <table class="table">
                 <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Status</td>
-                        <td>Token</td>
-                        <td>Quota</td>
-                    </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>Status</td>
+                    <td>Token</td>
+                    <td>Quota</td>
+                </tr>
                 </thead>
                 <tbody>
                 <tr v-for="sub in subsList" :key="sub.AccessToken">
@@ -208,5 +208,9 @@
 
     .stat-number {
         font-size: 64px;
+    }
+
+    td {
+        vertical-align: middle;
     }
 </style>
