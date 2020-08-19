@@ -18,6 +18,7 @@
             </div>
             <div class="row collapse show" id="collapsePanel">
 
+<!--                addition form-->
                 <div class="col">
 <!--                    add stuff-->
                     <div class="row">
@@ -65,6 +66,7 @@
                     </div>
                 </div>
 
+<!--                status + logger-->
                 <div class="col-8">
                     <div class="row">
                         <!--                        STATUS-->
@@ -126,6 +128,7 @@
                 </h4>
             </div>
             <div class="row collapse show" id="collapsePanel2">
+<!--                video update-->
                 <div class="col">
                     <h5>Update infos</h5>
                     <div class="card">
@@ -170,6 +173,7 @@
                     </div>
                 </div>
 
+<!--                video list-->
                 <div class="col-8">
 
                     <div v-if="videoList">
@@ -208,6 +212,7 @@
                                     <th>Artist</th>
                                     <th>Album</th>
                                     <th>Date</th>
+                                    <th>Genre</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -223,6 +228,7 @@
                                     <td>{{v.Artist}}</td>
                                     <td>{{v.Album}}</td>
                                     <td>{{parseTime(v.Date)}}</td>
+                                    <td>{{v.Genre}}</td>
                                 </tr>
                                 </tbody>
                             </table>
