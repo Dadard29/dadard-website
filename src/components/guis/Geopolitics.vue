@@ -18,6 +18,12 @@
                         </div>
                     </div>
                 </form>
+
+                <form @submit="loadAllCountriesForm">
+                    <div class="input-group mb-2">
+                        <button class="btn btn-primary">Load Countries</button>
+                    </div>
+                </form>
             </div>
             <div id="graphNode" class="container">
 
@@ -88,6 +94,25 @@
                     .catch(function(error) {
                         self.logger.error(error);
                         self.subscribed = false;
+                    })
+            },
+
+            loadAllCountriesForm(e) {
+                e.preventDefault();
+                this.loadAllCountries();
+            },
+
+            loadAllCountries() {
+                let self = this;
+
+                this.service.getAllCountries()
+                    .then(function(results) {
+                        self.graphRaw = results;
+                        self.graphData = self.service.processGraphRaw(self.graphRaw);
+                        self.service.renderGraph(self.graphData);
+                    })
+                    .catch(function(error) {
+                        self.logger.error(error)
                     })
             },
 

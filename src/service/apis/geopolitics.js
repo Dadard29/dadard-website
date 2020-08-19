@@ -14,7 +14,8 @@ export default class geopolitics {
         this.routes = {
             // todo
             relationships: "/relationships",
-            countries: "/countries"
+            countries: "/countries",
+            countriesAll: "/countries/all"
         };
 
         this.graph = null;
@@ -26,6 +27,20 @@ export default class geopolitics {
                 country: country,
             }
         })
+            .then(function(response) {
+                return response.data.Content
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    getAllCountries() {
+        return this.service.get(this.routes.countriesAll)
             .then(function(response) {
                 return response.data.Content
             })
@@ -64,6 +79,7 @@ export default class geopolitics {
                     style: {
                         fontSize: 8,
                         fill: "white",
+                        opacity: 0,
                     }
                 },
                 style: {
@@ -109,6 +125,9 @@ export default class geopolitics {
                 fitView: true,
             });
         }
+
+        this.graph.get('container').style.backgroundImage = 'url("../../../assets/backgrounds/world_map.jpeg")';
+        this.graph.get('container').style.backgroundSize = 'auto 100%';
 
         this.graph.data(graphData);
         this.graph.render();
