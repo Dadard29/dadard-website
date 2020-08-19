@@ -25,6 +25,9 @@
                     <router-link to="/apis/music-researcher" class="dropdown-item">
                         Music Researcher
                     </router-link>
+                    <router-link to="/apis/geopolitics" class="dropdown-item">
+                        Geopolitics
+                    </router-link>
                 </div>
             </div>
             <router-link to="/about" class="nav-item nav-link" exact-active-class="active">

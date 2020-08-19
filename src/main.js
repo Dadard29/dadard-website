@@ -11,6 +11,7 @@ import About from "@/components/About";
 import MusicResearcher from "@/components/guis/MusicResearcher";
 import Thoughts from "@/components/guis/Thoughts";
 import HomeConnected from "@/components/home/HomeConnected";
+import Geopolitics from "@/components/guis/Geopolitics";
 
 Vue.config.productionTip = false;
 
@@ -23,6 +24,7 @@ const routes = [
   {path: "/catalog/:apiName", component: CatalogDetail},
   {path: "/apis/youtube-download", component: YoutubeDownload},
   {path: "/apis/music-researcher", component: MusicResearcher},
+  {path: "/apis/geopolitics", component: Geopolitics},
   {path: "/about", component: About},
   {path: "/pensées", component: Thoughts},
   {path: "/dashboard", component: Dashboard},
