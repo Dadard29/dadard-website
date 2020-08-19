@@ -5,7 +5,7 @@
         <p>
             It's been a long time since I wrote something. In my native language I mean.
             When I was in a class, bored, sometimes, on a busy sheet, I could write what
-             all what came to my mind. I drew too. Ofter related to medieval and ancient greek stuff.
+             all what came to my mind. I drew too. Often related to medieval and ancient greek stuff.
             With hoplite, towers and knights. You know what, I'm bored of the English.
         </p>
         <p>
