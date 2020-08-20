@@ -98,7 +98,7 @@
 
     .bg-fire {
         position: fixed;
-        z-index: -1;
+        z-index: -10;
         bottom: -10px;
         text-align: center;
     }

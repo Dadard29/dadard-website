@@ -1,34 +1,44 @@
 <template>
     <div>
-        <div v-if="subscribed == null">
-            Loading...
-        </div>
-        <div v-else-if="subscribed === false">
-            You did not subscribe to this API.
-            Checkout the <router-link to="/catalog/geopolitics">catalog</router-link>
-        </div>
-        <div v-else>
-            salut
-            <div id="panel" class="container" style="width: 20%">
-                <form @submit="loadRelationshipsForm">
-                    <div class="input-group mb-2">
-                        <input v-model="countryInput" class="form-control custom-input">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary">Load relationships</button>
+            <div v-if="subscribed == null">
+                Loading...
+            </div>
+            <div v-else-if="subscribed === false">
+                You did not subscribe to this API.
+                Checkout the <router-link to="/catalog/geopolitics">catalog</router-link>
+            </div>
+            <div v-else id="graphViewer">
+                <h3>Geopolitics Viewer</h3>
+                <fullscreen ref="fullscreen" @change="fullscreenChange" background="black" >
+                    <div id="panel" class="container">
+                        <div class="row">
+                            <div class="col-">
+                                <img @click="toggleFullScreen" class="fullscreen-toggle panel-widget" src="../../assets/icons/full_screen.png">
+                            </div>
+                            <div class="col-">
+                                <div class="input-group mb-2">
+                                    <input v-model="countryInput" class="form-control country-input panel-widget">
+                                    <div class="input-group-append">
+                                        <button @click="loadRelationships" type="button"
+                                                class="btn btn-outline-primary panel-widget" style="padding: 0 5px 0 5px">
+                                            <img src="../../assets/icons/graph.png" style="height: 20px">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button @click="loadAllCountries" type="button"
+                                        class="btn btn-outline-primary panel-widget" style="padding: 0 5px 0 5px">
+                                    <img src="../../assets/icons/france.png" style="height: 20px">
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </form>
+                    <div id="graphNode" class="container">
 
-                <form @submit="loadAllCountriesForm">
-                    <div class="input-group mb-2">
-                        <button class="btn btn-primary">Load Countries</button>
                     </div>
-                </form>
+                </fullscreen>
             </div>
-            <div id="graphNode" class="container">
-
-            </div>
-        </div>
     </div>
 </template>
 
@@ -62,6 +72,9 @@
                 accessToken: null,
                 service: null,
 
+                // dom
+                fullscreen: false,
+
                 // input
                 countryInput: "FRA",
 
@@ -86,7 +99,7 @@
                             }, hostname);
 
                             // fixme - testing only
-                            self.loadRelationships()
+                            self.loadAllCountries()
                         } else {
                             self.subscribed = false;
                         }
@@ -95,11 +108,6 @@
                         self.logger.error(error);
                         self.subscribed = false;
                     })
-            },
-
-            loadAllCountriesForm(e) {
-                e.preventDefault();
-                this.loadAllCountries();
             },
 
             loadAllCountries() {
@@ -115,13 +123,6 @@
                         self.logger.error(error)
                     })
             },
-
-            loadRelationshipsForm(e) {
-                // prevent for reload page
-                e.preventDefault();
-                this.loadRelationships();
-
-            },
             loadRelationships() {
 
                 let self = this;
@@ -134,11 +135,37 @@
                     .catch(function(error) {
                         self.logger.error(error)
                     })
+            },
+            toggleFullScreen () {
+                this.$refs['fullscreen'].toggle()
+            },
+            fullscreenChange (fullscreen) {
+                this.fullscreen = fullscreen
             }
         }
     }
 </script>
 
 <style scoped>
+    .fullscreen-toggle {
+        border: solid 1px white;
+        border-radius: 4px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
 
+    .fullscreen-toggle:hover {
+        filter: brightness(50%);
+    }
+
+    .country-input {
+        background-color: black;
+        color: inherit;
+        text-align: center;
+
+    }
+
+    .panel-widget {
+        height: 22px;
+    }
 </style>

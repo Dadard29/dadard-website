@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import fullscreen from 'vue-fullscreen'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import Dashboard from "./components/dashboard/Dashboard";
@@ -16,6 +17,7 @@ import Geopolitics from "@/components/guis/Geopolitics";
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
+Vue.use(fullscreen);
 
 const routes = [
   {path: "/", component: HomeConnected},

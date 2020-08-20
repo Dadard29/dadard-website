@@ -1,8 +1,11 @@
 const axios = require('axios').default;
 import G6 from '@antv/g6';
 
+// const WIDTH = 1000;
+// const HEIGHT = 700;
+
 const WIDTH = 1000;
-const HEIGHT = 700;
+const HEIGHT = 1000;
 
 export default class geopolitics {
     constructor(headers, host) {
@@ -12,7 +15,6 @@ export default class geopolitics {
         });
 
         this.routes = {
-            // todo
             relationships: "/relationships",
             countries: "/countries",
             countriesAll: "/countries/all"
@@ -65,15 +67,41 @@ export default class geopolitics {
 
         nodesRaw.forEach(function(n) {
             let nodeSize = 1;
-            if (n.rank !== -1 && n.rank > 0) {
-                nodeSize = (invertedRank - n.rank) / 10;
+            if (n.rank > 0) {
+                if (n.rank < 5) {
+                    nodeSize = (invertedRank - n.rank) / 5;
+                } else {
+                    nodeSize = (invertedRank - n.rank) / 10;
+                }
             }
+
+            const long = n.coordinate.longitude;
+            const lat = n.coordinate.latitude;
+
+            // https://medium.com/@suverov.dmitriy/how-to-convert-latitude-and-longitude-coordinates-into-pixel-offsets-8461093cb9f5
+            function degreesToRad(deg) {
+                return (deg  * Math.PI) / 180
+            }
+
+            const radius = WIDTH / (2 * Math.PI);
+            const FE = 180;
+            const longRad = degreesToRad(long + FE);
+            const x = longRad * radius;
+            const latRad = degreesToRad(lat);
+            const verticalOffsetFromEquator =
+                radius * Math.log(Math.tan(Math.PI / 4 + latRad / 2));
+            const y = (HEIGHT / 2) - verticalOffsetFromEquator;
+
+
+            // default
+            // const x = long;
+            // const y = HEIGHT - lat;
 
             nodes.push({
                 id: n.id,
                 size: nodeSize,
-                x: n.coordinate.longitude,
-                y: HEIGHT - n.coordinate.latitude,
+                x: x,
+                y: y,
                 label: n.key,
                 labelCfg: {
                     style: {
@@ -124,10 +152,38 @@ export default class geopolitics {
 
                 fitView: true,
             });
+
+            // set listeners
+            let g = this.graph;
+            g.on('node:mouseenter', e => {
+                const nodeItem = e.item;
+                g.updateItem(nodeItem, {
+                    labelCfg: {
+                        style: {
+                            opacity: 1,
+                        }
+                    }
+                })
+            });
+
+            g.on('node:mouseleave', e => {
+                const nodeItem = e.item;
+                g.updateItem(nodeItem, {
+                    labelCfg: {
+                        style: {
+                            opacity: 0,
+                        }
+                    }
+                })
+            });
         }
 
-        this.graph.get('container').style.backgroundImage = 'url("../../../assets/backgrounds/world_map.jpeg")';
+        this.graph.get('container').style.backgroundImage =
+            'url("http://localhost:35729/Mercator_projection_Square_scaled.png")';
         this.graph.get('container').style.backgroundSize = 'auto 100%';
+        this.graph.get('container').style.backgroundRepeat = 'no-repeat';
+        this.graph.get('container').style.backgroundPositionX = '7px';
+        this.graph.get('container').style.backgroundPositionY = '16px';
 
         this.graph.data(graphData);
         this.graph.render();
