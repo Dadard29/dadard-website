@@ -9,33 +9,92 @@
             </div>
             <div v-else id="graphViewer">
                 <h3>Geopolitics Viewer</h3>
-                <fullscreen ref="fullscreen" @change="fullscreenChange" background="black" >
-                    <div id="panel" class="container">
-                        <div class="row">
-                            <div class="col-">
-                                <img @click="toggleFullScreen" class="fullscreen-toggle panel-widget" src="../../assets/icons/full_screen.png">
+                <fullscreen ref="fullscreen" @change="fullscreenChange" background="black" class="container-fluid">
+                    <div class="row form-row align-items-center" style="margin: 10px">
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <img @click="toggleFullScreen" class="fullscreen-toggle" src="../../assets/icons/full_screen.png">
                             </div>
-                            <div class="col-">
-                                <div class="input-group mb-2">
-                                    <input v-model="countryInput" class="form-control country-input panel-widget">
-                                    <div class="input-group-append">
-                                        <button @click="loadRelationships" type="button"
-                                                class="btn btn-outline-primary panel-widget" style="padding: 0 5px 0 5px">
-                                            <img src="../../assets/icons/graph.png" style="height: 20px">
-                                        </button>
-                                    </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <input id="country-input" v-model="countryInput" class="form-control">
+                                <div class="input-group-append">
+                                    <button @click="loadRelationships" type="button" class="btn btn-outline-primary">
+                                        Load country rels
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col">
-                                <button @click="loadAllCountries" type="button"
-                                        class="btn btn-outline-primary panel-widget" style="padding: 0 5px 0 5px">
-                                    <img src="../../assets/icons/france.png" style="height: 20px">
-                                </button>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <select v-model="regionInput" class="form-control">
+                                    <option value="">-- all --</option>
+                                    <option value="europe">Europe</option>
+                                    <option value="asia">Asia</option>
+                                    <option value="africa">Africa</option>
+                                    <option value="amerSouth">South America</option>
+                                    <option value="amerNorth">North America</option>
+                                    <option value="oceania">Oceania</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button @click="loadAllCountries" type="button" id="load-nodes" class="btn btn-outline-primary">
+                                        Load all countries
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div id="graphNode" class="container">
+                    <div class="row align-items-center" style="width: 80%">
+                        <div class="col">
+                            <div id="graphNode" class="container">
 
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div v-if="service.selectedNode != null" class="card">
+                                <img :src="service.selectedNode.flag" class="card-img-top">
+                                <div class="card-header">{{service.selectedNode.name}}</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-2 text-muted">KEY</div>
+                                        <div class="col">{{service.selectedNode.key}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 text-muted">POP</div>
+                                        <div class="col">{{service.selectedNodePop()}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 text-muted">CAP</div>
+                                        <div class="col">{{service.selectedNode.capital}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 text-muted">COO</div>
+                                        <div class="col">
+                                            <a :href="`https://www.google.com/maps/place/${service.selectedNodeCoordinates()}`"
+                                               target="_blank" >{{service.selectedNodeCoordinates()}}</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 text-muted">CUR</div>
+                                        <div class="col">
+                                            <span v-for="c in service.selectedNode.currencies" :key="c"
+                                                  class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 text-muted">LAN</div>
+                                        <div class="col">
+                                            <span v-for="c in service.selectedNode.languages" :key="c"
+                                                  class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                stuff
+                            </div>
+                        </div>
                     </div>
                 </fullscreen>
             </div>
@@ -77,6 +136,7 @@
 
                 // input
                 countryInput: "FRA",
+                regionInput: "",
 
                 graphRaw: null,
                 graphData: null,
@@ -113,11 +173,11 @@
             loadAllCountries() {
                 let self = this;
 
-                this.service.getAllCountries()
+                this.service.getAllCountries(this.regionInput)
                     .then(function(results) {
                         self.graphRaw = results;
                         self.graphData = self.service.processGraphRaw(self.graphRaw);
-                        self.service.renderGraph(self.graphData);
+                        self.service.renderGraph(self.graphData, self.regionInput);
                     })
                     .catch(function(error) {
                         self.logger.error(error)
@@ -130,7 +190,7 @@
                     .then(function(results) {
                         self.graphRaw = results;
                         self.graphData = self.service.processGraphRaw(self.graphRaw);
-                        self.service.renderGraph(self.graphData);
+                        self.service.renderGraph(self.graphData, null);
                     })
                     .catch(function(error) {
                         self.logger.error(error)
