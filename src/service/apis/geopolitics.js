@@ -67,6 +67,7 @@ export default class geopolitics {
         };
 
         this.graph = null;
+        this.graphData = null;
         this.selectedNode = null;
     }
 
@@ -208,7 +209,8 @@ export default class geopolitics {
             })
         });
 
-
+        let edgeBaseId = 'edge';
+        let index = 0;
         edgesRaw.forEach(function(e) {
             // gettin curve offset
 
@@ -226,16 +228,26 @@ export default class geopolitics {
             let coef = 0.5; // 180 / 50
             let curveOffset = (Math.abs(longA - longB) * coef);
 
+            let color = 'red';
+            if (e.score > 0) {
+                color = 'green'
+            }
+
+            let id = `${edgeBaseId}${index}`;
             edges.push({
+                id: id,
                 source: e._from,
                 target: e._to,
-                label: e.subject,
+                label: e.score,
                 curveOffset: curveOffset,
                 style: {
-                    lineWidth: e.impact / 10,
-                    opacity: 0.6,
+                    stroke: color,
+                    lineWidth: 2,
+                    opacity: 0,
                 }
-            })
+            });
+
+            index += 1;
         });
 
         return {
@@ -258,6 +270,7 @@ export default class geopolitics {
                 fitView: true,
                 linkCenter: true,
 
+                // default styles
                 defaultNode: {
                     labelCfg: {
                         style: {
@@ -266,21 +279,34 @@ export default class geopolitics {
                             opacity: 0,
                         }
                     },
+                    style: {
+                        fill: "darkblue",
+                        stroke: "blue",
+                    }
                 },
 
                 defaultEdge: {
                     type: 'arc',
                     labelCfg: {
                         style: {
-                            fontSize: 6,
                             opacity: 0,
                         }
                     },
+                    style: {
+                        lineWidth: 2,
+                        opacity: 0,
+                    }
                 },
 
                 nodeStateStyles: {
                     click: {
                         stroke: 'lightblue',
+                    }
+                },
+
+                edgeStateStyles: {
+                    click: {
+                        opacity: 0.6,
                     }
                 }
             });
@@ -310,18 +336,36 @@ export default class geopolitics {
             });
 
             g.on('node:click', e => {
-                // Swich the 'click' state of the node to be false
+                // switch the 'click' state of the node to be false
                 const clickNodes = g.findAllByState('node', 'click');
                 clickNodes.forEach(cn => {
                     g.setItemState(cn, 'click', false);
                 });
 
                 const nodeItem = e.item;
+
+                // set state
                 g.setItemState(nodeItem, 'click', true);
                 self.selectedNode = nodeItem._cfg.model.data;
+
+                // search for all the edges connected and activate click state
+                let nodeId = self.selectedNode.id;
+                self.graphData.edges.forEach(function(e) {
+                    let edgeItem = g.findById(e.id);
+                    if (edgeItem === undefined) {
+                        // something went wrong (an edge from graphData has not been rendered)
+                        return
+                    }
+                    if (e.source === nodeId || e.target === nodeId) {
+                        g.setItemState(edgeItem, 'click', true);
+                    } else {
+                        g.setItemState(edgeItem, 'click', false);
+                    }
+                })
             })
         }
 
+        // set background
         if (region !== null) {
             this.graph.get('container').style.backgroundRepeat = 'no-repeat';
 
@@ -342,6 +386,7 @@ export default class geopolitics {
         }
 
         // render
+        this.graphData = graphData;
         this.graph.data(graphData);
         this.graph.render();
     }

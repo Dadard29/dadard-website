@@ -1,4 +1,12 @@
-export default class relationship {
+export default class relationshipScore {
+    _from;
+    _to;
+    score;
+    sectorRepartition;
+    lastUpdate;
+}
+
+export class relationship {
     _from;
     _to;
     subject;

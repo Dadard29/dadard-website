@@ -11,11 +11,21 @@
                 <h3>Geopolitics Viewer</h3>
                 <fullscreen ref="fullscreen" @change="fullscreenChange" background="black" class="container-fluid">
                     <div class="row form-row align-items-center" style="margin: 10px">
+<!--                        fullscreen toggle-->
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <img @click="toggleFullScreen" class="fullscreen-toggle" src="../../assets/icons/full_screen.png">
                             </div>
                         </div>
+
+<!--                        reload-->
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <img @click="reloadG6" class="reload-g6" src="../../assets/icons/refresh.png">
+                            </div>
+                        </div>
+
+<!--                        load rels from country-->
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <input id="country-input" v-model="countryInput" class="form-control">
@@ -26,6 +36,8 @@
                                 </div>
                             </div>
                         </div>
+
+<!--                        load rels from region-->
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <select v-model="regionInput" class="form-control">
@@ -51,7 +63,9 @@
 
                             </div>
                         </div>
+
                         <div class="col">
+<!--                            country-->
                             <div v-if="service.selectedNode != null" class="card">
                                 <img :src="service.selectedNode.flag" class="card-img-top">
                                 <div class="card-header">{{service.selectedNode.name}}</div>
@@ -78,21 +92,18 @@
                                     <div class="row">
                                         <div class="col-2 text-muted">CUR</div>
                                         <div class="col">
-                                            <span v-for="c in service.selectedNode.currencies" :key="c"
-                                                  class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                    <span v-for="c in service.selectedNode.currencies" :key="c"
+                                          class="badge badge-secondary" style="margin: 3px">{{c}}</span>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-2 text-muted">LAN</div>
                                         <div class="col">
-                                            <span v-for="c in service.selectedNode.languages" :key="c"
-                                                  class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                    <span v-for="c in service.selectedNode.languages" :key="c"
+                                          class="badge badge-primary" style="margin: 3px">{{c}}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div v-else>
-                                stuff
                             </div>
                         </div>
                     </div>
@@ -201,6 +212,9 @@
             },
             fullscreenChange (fullscreen) {
                 this.fullscreen = fullscreen
+            },
+            reloadG6() {
+                window.location.reload();
             }
         }
     }
@@ -215,6 +229,19 @@
     }
 
     .fullscreen-toggle:hover {
+        filter: brightness(50%);
+    }
+
+    .reload-g6 {
+        width: 22px;
+        height: 22px;
+        border: solid 1px white;
+        border-radius: 4px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .reload-g6:hover {
         filter: brightness(50%);
     }
 
