@@ -29,7 +29,7 @@
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <select v-model="regionInput" class="form-control">
-                                    <option value="">-- all --</option>
+                                    <option value="">World</option>
                                     <option value="europe">Europe</option>
                                     <option value="asia">Asia</option>
                                     <option value="africa">Africa</option>

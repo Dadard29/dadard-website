@@ -170,6 +170,7 @@ export default class geopolitics {
                 }
             }
 
+            // mapping x and y with coordinates
             const long = n.coordinate.longitude;
             const lat = n.coordinate.latitude;
 
@@ -198,33 +199,38 @@ export default class geopolitics {
                 x: x,
                 y: y,
                 label: n.key,
-                labelCfg: {
-                    style: {
-                        fontSize: 12,
-                        fill: "white",
-                        opacity: 0,
-                    }
-                },
                 style: {
                     lineWidth: nodeSize / 10,
-                    fill: "darkgrey",
-                    stroke: "grey",
+                    fill: "darkblue",
+                    stroke: "blue",
                 },
                 data: n
             })
         });
 
+
         edgesRaw.forEach(function(e) {
+            // gettin curve offset
+
+            let longA, longB;
+            nodesRaw.forEach(function(n) {
+                if (n.id === e._from) {
+                    longA = n.coordinate.longitude;
+                }
+
+                if (n.id === e._to) {
+                    longB = n.coordinate.longitude;
+                }
+            });
+
+            let coef = 0.5; // 180 / 50
+            let curveOffset = (Math.abs(longA - longB) * coef);
+
             edges.push({
                 source: e._from,
                 target: e._to,
                 label: e.subject,
-                labelCfg: {
-                    style: {
-                        fontSize: 6,
-                        opacity: 0,
-                    }
-                },
+                curveOffset: curveOffset,
                 style: {
                     lineWidth: e.impact / 10,
                     opacity: 0.6,
@@ -250,10 +256,31 @@ export default class geopolitics {
                 height: HEIGHT,
 
                 fitView: true,
+                linkCenter: true,
+
+                defaultNode: {
+                    labelCfg: {
+                        style: {
+                            fontSize: 12,
+                            fill: "white",
+                            opacity: 0,
+                        }
+                    },
+                },
+
+                defaultEdge: {
+                    type: 'arc',
+                    labelCfg: {
+                        style: {
+                            fontSize: 6,
+                            opacity: 0,
+                        }
+                    },
+                },
 
                 nodeStateStyles: {
                     click: {
-                        stroke: 'lightgrey',
+                        stroke: 'lightblue',
                     }
                 }
             });
