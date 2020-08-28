@@ -1,13 +1,13 @@
 const axios = require('axios').default;
 import G6 from '@antv/g6';
 
-// const WIDTH = 1000;
-// const HEIGHT = 700;
 
 const WIDTH = 1000;
 const HEIGHT = 1000;
 
-export default class geopolitics {
+const SCORE_NEUTRAL = 0;
+
+export default class graphViewer {
     constructor(headers, host) {
         this.service = axios.create({
             headers: headers,
@@ -17,7 +17,6 @@ export default class geopolitics {
         this.routes = {
             relationships: "/relationships",
             countries: "/countries",
-            countriesAll: "/countries/all"
         };
 
 
@@ -69,6 +68,32 @@ export default class geopolitics {
         this.graph = null;
         this.graphData = null;
         this.selectedNode = null;
+        this.selectedEdges = [];
+    }
+
+    selectedNodeScore() {
+        let score = 0;
+        this.selectedEdges.forEach(function(e) {
+            score += e.data.score;
+        });
+
+        let scoreStr = `${score}`;
+        if (score >= 0) {
+            scoreStr = `+${score}`
+        }
+
+        let color = 'red';
+        if (score === 0) {
+            color = 'white';
+        } else if (score > 0) {
+            color = 'green'
+        }
+
+        return {
+            score: score,
+            scoreStr: scoreStr,
+            color: color,
+        };
     }
 
     selectedNodePop() {
@@ -133,7 +158,7 @@ export default class geopolitics {
     }
 
     getAllCountries(region) {
-        return this.service.get(this.routes.countriesAll, {
+        return this.service.get(this.routes.countries, {
             params: {
                 region: region,
             }
@@ -229,7 +254,7 @@ export default class geopolitics {
             let curveOffset = (Math.abs(longA - longB) * coef);
 
             let color = 'red';
-            if (e.score > 0) {
+            if (e.score > SCORE_NEUTRAL) {
                 color = 'green'
             }
 
@@ -244,7 +269,8 @@ export default class geopolitics {
                     stroke: color,
                     lineWidth: 2,
                     opacity: 0,
-                }
+                },
+                data: e
             });
 
             index += 1;
@@ -350,6 +376,7 @@ export default class geopolitics {
 
                 // search for all the edges connected and activate click state
                 let nodeId = self.selectedNode.id;
+                self.selectedEdges = [];
                 self.graphData.edges.forEach(function(e) {
                     let edgeItem = g.findById(e.id);
                     if (edgeItem === undefined) {
@@ -358,10 +385,11 @@ export default class geopolitics {
                     }
                     if (e.source === nodeId || e.target === nodeId) {
                         g.setItemState(edgeItem, 'click', true);
+                        self.selectedEdges.push(e);
                     } else {
                         g.setItemState(edgeItem, 'click', false);
                     }
-                })
+                });
             })
         }
 
@@ -389,5 +417,12 @@ export default class geopolitics {
         this.graphData = graphData;
         this.graph.data(graphData);
         this.graph.render();
+    }
+
+    clearGraph() {
+        this.graph = null;
+        this.graphData = null;
+        this.selectedNode = null;
+        this.selectedEdges = [];
     }
 }
