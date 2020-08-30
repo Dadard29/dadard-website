@@ -58,10 +58,10 @@ export default class graphViewer {
                 "zoom": "86%"
             },
             "": {
-                "img": 'url("/images/Mercator_projection_Square_scaled.png")',
-                "x": "7px",
-                "y": "16px",
-                "zoom": "100%"
+                "img": 'url("/images/Mercator_projection_Square_scaled.jpeg")',
+                "x": "11px",
+                "y": "23px",
+                "zoom": "99%"
             }
         };
 
@@ -420,9 +420,14 @@ export default class graphViewer {
     }
 
     clearGraph() {
-        this.graph = null;
-        this.graphData = null;
-        this.selectedNode = null;
-        this.selectedEdges = [];
+        if (this.graph !== null) {
+            this.graph.get('container').style.backgroundSize = 'auto 0%';
+            this.graph.clear();
+            this.graph.destroy();
+            this.graph = null;
+            this.graphData = null;
+            this.selectedNode = null;
+            this.selectedEdges = [];
+        }
     }
 }

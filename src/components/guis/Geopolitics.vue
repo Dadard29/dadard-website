@@ -7,7 +7,7 @@
                 You did not subscribe to this API.
                 Checkout the <router-link to="/catalog/geopolitics">catalog</router-link>
             </div>
-            <div v-else id="graphViewer">
+            <div v-else class="geop-dashboard">
                 <h3>Geopolitics Viewer</h3>
                 <fullscreen ref="fullscreen" @change="fullscreenChange" background="black" class="container-fluid">
 <!--                    panel-->
@@ -96,15 +96,29 @@
                     </div>
 
 <!--                    graphviewer content-->
-                    <div v-if="tab === tabValues.graphViewer" class="row align-items-center" style="width: 80%">
+                    <div v-if="tab === tabValues.graphViewer" class="row" style="width: 100%">
 <!--                        graph viewer-->
                         <div class="col">
                             <div id="graphNode" class="container"></div>
                         </div>
+                        <div class="col">
+<!--                            transaction details-->
+                            <div class="row">
+                                <div v-if="graphViewerService.graphData !== null" style="margin: 20px">
+                                    <div>
+                                        <span style="font-size: 30px">{{graphViewerService.graphData.nodes.length}}</span> countries
+                                        <span style="font-size: 30px">{{graphViewerService.graphData.edges.length}}</span> relations
+                                    </div>
+                                    <div>
+                                        <small>Loaded on {{perf}}ms</small>
+                                    </div>
+                                </div>
+                            </div>
 
 <!--                            country-->
-                        <div class="col">
-                            <div v-if="graphViewerService.selectedNode != null" class="card">
+                            <div class="row">
+                                <div v-if="graphViewerService.selectedNode != null" style="width: 50%">
+                                    <div class="card">
                                 <img :src="graphViewerService.selectedNode.flag" class="card-img-top">
                                 <div class="card-header">{{graphViewerService.selectedNode.name}}</div>
                                 <div class="card-body">
@@ -156,12 +170,129 @@
                                     </div>
                                 </div>
                             </div>
+                                </div>
+                                <div v-else>Click on a country to see details</div>
+                            </div>
                         </div>
                     </div>
 
 <!--                    relation detail content-->
-                    <div v-if="tab === tabValues.relationDetailsViewer" class="row">
-                        <div id="relationDetailNode" class="container"></div>
+                    <div v-if="tab === tabValues.relationDetailsViewer" class="row justify-content-md-center">
+<!--                        country A-->
+                        <div class="col-2" v-if="getCountryA() !== null">
+                            <div class="card">
+                                <img :src="getCountryA().flag" class="card-img-top">
+                                <div class="card-header">{{getCountryA().name}}</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div>
+                                                <span class="text-muted">KEY </span>
+                                                {{getCountryA().key}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">POP </span>
+                                                {{relationDetailsService.getPop(getCountryA())}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">CAP </span>
+                                                {{getCountryA().capital}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">COO </span>
+                                                <a :href="`https://www.google.com/maps/place/${relationDetailsService.getCoordinate(getCountryA())}`"
+                                                    target="_blank">{{relationDetailsService.getCoordinate(getCountryA())}}</a>
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">CUR </span>
+                                                <span v-for="c in getCountryA().currencies" :key="c"
+                                                      class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">LAN </span>
+                                                <span v-for="c in getCountryA().languages" :key="c"
+                                                      class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        data-->
+                        <div class="col">
+<!--                            charts-->
+                            <div class="row justify-content-md-center">
+<!--                                sectors-->
+                                <div class="col-3">
+                                    <canvas id="sectorsChart" width="200px" height="200px"></canvas>
+                                </div>
+
+<!--                                score evolution-->
+                                <div class="col-3">
+                                    <canvas id="scoreEvolutionChart" width="200px" height="200px"></canvas>
+                                </div>
+
+                                <div class="col-3">
+                                    <canvas id="initChart" width="200px" height="200px"></canvas>
+                                </div>
+                            </div>
+
+<!--                            grid-->
+                            <div class="row">
+                                <Grid v-if="relationDetailsService.edgeHistoryDataset != null"
+                                      :cols="getEdgeHistoryDataset().cols"
+                                      :rows="getEdgeHistoryDataset().rows"
+                                      :styles="getEdgeHistoryDataset().styles"
+                                      :sort="true"
+                                      :pagination="true"
+                                      :fixedHeader="true"
+                                      :search="true"
+                                      :auto-width="true"
+                                ></Grid>
+                            </div>
+                        </div>
+
+<!--                        country B-->
+                        <div class="col-2" v-if="getCountryB() !== null">
+                            <div class="card">
+                                <img :src="getCountryB().flag" class="card-img-top">
+                                <div class="card-header">{{getCountryB().name}}</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div>
+                                                <span class="text-muted">KEY </span>
+                                                {{getCountryB().key}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">POP </span>
+                                                {{relationDetailsService.getPop(getCountryB())}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">CAP </span>
+                                                {{getCountryB().capital}}
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">COO </span>
+                                                <a :href="`https://www.google.com/maps/place/${relationDetailsService.getCoordinate(getCountryB())}`"
+                                                   target="_blank">{{relationDetailsService.getCoordinate(getCountryB())}}</a>
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">CUR </span>
+                                                <span v-for="c in getCountryB().currencies" :key="c"
+                                                      class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-muted">LAN </span>
+                                                <span v-for="c in getCountryB().languages" :key="c"
+                                                      class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </fullscreen>
@@ -171,6 +302,7 @@
 
 <script>
     import G6 from '@antv/g6';
+    import Chart from 'chart.js';
 
     import graphViewer from "@/service/apis/graphViewer";
     import relationDetails from "@/service/apis/relationDetails";
@@ -207,6 +339,12 @@
                 fullscreen: false,
                 isLoading: false,
 
+                sectorChart: null,
+                scoreChart: null,
+                initChart: null,
+
+                perf: 0,
+
                 // input
                 countryInput: "FRA",
                 regionInput: "",
@@ -223,9 +361,6 @@
                 tab: 'graphViewer'
 
             }
-        },
-        computed: {
-
         },
         methods: {
             getSub() {
@@ -248,7 +383,7 @@
                             }, hostname);
 
                             // fixme - testing only
-                            self.loadAllCountries()
+                            self.setTabGraphViewer();
                         } else {
                             self.subscribed = false;
                         }
@@ -263,12 +398,15 @@
                 let self = this;
                 self.isLoading = true;
 
+                let t0 = performance.now();
                 this.graphViewerService.getAllCountries(this.regionInput)
                     .then(function(results) {
                         self.graphRaw = results;
                         self.graphData = self.graphViewerService.processGraphRaw(self.graphRaw);
                         self.graphViewerService.renderGraph(self.graphData, self.regionInput);
 
+                        let t1 = performance.now();
+                        self.perf = t1 - t0;
                         self.isLoading = false;
                     })
                     .catch(function(error) {
@@ -298,12 +436,90 @@
                 let self = this;
                 self.isLoading = true;
 
+                if (self.scoreChart !== null) {
+                    self.scoreChart.destroy();
+                }
+
+                if (self.sectorChart !==  null) {
+                    self.sectorChart.destroy();
+                }
+
+                if (self.initChart !== null) {
+                    self.initChart.destroy();
+                }
+
                 this.relationDetailsService.getRelationDetails(this.countryAInput, this.countryBInput)
-                    .then(function(results) {
-                        self.graphRaw = results;
-                        self.graphData = self.relationDetailsService.processGraphRaw(
-                            self.graphRaw.nodes, self.graphRaw.edgeScore);
-                        self.relationDetailsService.renderGraph(self.graphData, null);
+                    .then(function() {
+                        // set charts
+                        let sectorsCtx = document.getElementById('sectorsChart').getContext('2d');
+                        let sectorsDataset = self.relationDetailsService.getSectorsDataset();
+                        self.sectorChart = new Chart(sectorsCtx, {
+                            type: 'doughnut',
+                            data: sectorsDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Sector repartition'
+                                },
+                                responsive: true,
+                                circumference: Math.PI,
+                                rotation: -Math.PI
+                            }
+                        });
+
+                        let scoreCtx = document.getElementById('scoreEvolutionChart').getContext('2d');
+                        let timeFormat = 'DD/MM/YYYY HH:mm';
+                        let scoreDataset = self.relationDetailsService.getScoreHistoryDataset(timeFormat);
+                        self.scoreChart = new Chart(scoreCtx, {
+                            type: 'line',
+                            data: scoreDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Score evolution'
+                                },
+                                responsive: true,
+                                scales: {
+                                    xAxes: [{
+                                        type: 'time',
+                                        time: {
+                                            parser: timeFormat,
+                                            round: 'day',
+                                            tooltipFormat: 'll HH:mm'
+                                        },
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Date'
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'value'
+                                        }
+                                    }]
+                                },
+                            }
+                        });
+
+                        let initCtx = document.getElementById('initChart').getContext('2d');
+                        let initDataset = self.relationDetailsService.getInitDataset();
+                        self.initChart = new Chart(initCtx, {
+                            type: 'doughnut',
+                            data: initDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Initiation repartition'
+                                },
+                                responsive: true,
+                                circumference: Math.PI,
+                                rotation: -Math.PI
+                            }
+                        });
+
+                        // set grid
+                        self.relationDetailsService.getEdgeHistoryDataset();
 
                         self.isLoading = false;
                     })
@@ -311,6 +527,16 @@
                         self.logger.error(error);
                         self.isLoading = false;
                     })
+            },
+
+            getCountryA() {
+                return this.relationDetailsService.countryA;
+            },
+            getCountryB() {
+                return this.relationDetailsService.countryB;
+            },
+            getEdgeHistoryDataset() {
+                return this.relationDetailsService.edgeHistoryDataset;
             },
 
             toggleFullScreen () {
@@ -325,7 +551,6 @@
 
             setTabGraphViewer() {
                 this.tab = this.tabValues.graphViewer;
-                this.relationDetailsService.clearGraph();
 
                 // fixme
                 this.loadAllCountries();
@@ -333,12 +558,19 @@
             setTabRelationDetailsViewer() {
                 this.tab = this.tabValues.relationDetailsViewer;
                 this.graphViewerService.clearGraph();
+
+                // fixme
+                this.loadRelationshipDetails();
             }
         }
     }
 </script>
 
 <style scoped>
+    .geop-dashboard {
+        margin-bottom: 20px;
+    }
+
     .fullscreen-toggle {
         border: solid 1px white;
         border-radius: 4px;

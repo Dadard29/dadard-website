@@ -13,11 +13,13 @@ import MusicResearcher from "@/components/guis/MusicResearcher";
 import Thoughts from "@/components/guis/Thoughts";
 import HomeConnected from "@/components/home/HomeConnected";
 import Geopolitics from "@/components/guis/Geopolitics";
+import { GridGlobal } from 'gridjs-vue'
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 Vue.use(fullscreen);
+Vue.use(GridGlobal);
 
 const routes = [
   {path: "/", component: HomeConnected},
