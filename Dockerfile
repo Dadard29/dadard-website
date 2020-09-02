@@ -10,6 +10,7 @@ COPY package*.json ./
 RUN sed -i -e "s+{{VERSION}}+$FRONT_VERSION+g" "package.json"
 
 RUN npm install
+RUN npm install --save @antv/g6 chart.js gridjs gridjs-vue moment vue-fullscreen
 
 COPY ./ .
 RUN sed -i -e "s+{{VERSION}}+$FRONT_VERSION+g" "package.json"
