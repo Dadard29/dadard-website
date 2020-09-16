@@ -17,6 +17,7 @@ export default class graphViewer {
         this.routes = {
             relationships: "/relationships",
             countries: "/countries",
+            organisations: "/organisations"
         };
 
 
@@ -68,6 +69,7 @@ export default class graphViewer {
         this.graph = null;
         this.graphData = null;
         this.selectedNode = null;
+        this.selectedOrganisations = null;
         this.selectedEdges = [];
     }
 
@@ -161,6 +163,24 @@ export default class graphViewer {
         return this.service.get(this.routes.countries, {
             params: {
                 region: region,
+            }
+        })
+            .then(function(response) {
+                return response.data.Content
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
+    }
+
+    getOrganisation(orgKey) {
+        return this.service.get(this.routes.organisations, {
+            params: {
+                organisationKey: orgKey
             }
         })
             .then(function(response) {
@@ -373,6 +393,30 @@ export default class graphViewer {
                 // set state
                 g.setItemState(nodeItem, 'click', true);
                 self.selectedNode = nodeItem._cfg.model.data;
+
+                // get all the organisations concerned
+                self.selectedOrganisations = [];
+                for (let o of self.selectedNode.organisation_keys) {
+                    self.getOrganisation(o)
+                        .then(function(org) {
+                            self.selectedOrganisations.push(org)
+                        })
+                }
+
+                function compare(a, b) {
+                    let aName = a.key.split(" ")[0];
+                    let bName = b.key.split(" ")[0];
+
+                    if (aName < bName) {
+                        return -1
+                    } else if (aName > bName) {
+                        return 1
+                    } else {
+                        return 0
+                    }
+                }
+
+                self.selectedOrganisations.sort(compare);
 
                 // search for all the edges connected and activate click state
                 let nodeId = self.selectedNode.id;

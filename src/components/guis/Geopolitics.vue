@@ -117,61 +117,74 @@
 
 <!--                            country-->
                             <div class="row">
-                                <div v-if="graphViewerService.selectedNode != null" style="width: 50%">
+                                <div v-if="graphViewerService.selectedNode != null" class="col">
                                     <div class="card">
-                                <img :src="graphViewerService.selectedNode.flag" class="card-img-top">
-                                <div class="card-header">{{graphViewerService.selectedNode.name}}</div>
-                                <div class="card-body">
-                                    <div class="row" style="margin-bottom: 10px">
-                                        <div class="col" style="text-align: center">
-                                            <span class="global-score"
-                                                  :style="`
-                                                  border-color: ${graphViewerService.selectedNodeScore().color};
-                                                  color: ${graphViewerService.selectedNodeScore().color};`">
-                                                    {{graphViewerService.selectedNodeScore().scoreStr}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="row align-items-center">
-<!--                                        key, pop, cap-->
-                                        <div class="col">
-                                            <div>
-                                                <span class="text-muted">KEY </span>
-                                                {{graphViewerService.selectedNode.key}}
+                                        <img :src="graphViewerService.selectedNode.flag" class="card-img-top">
+                                        <div class="card-header">{{graphViewerService.selectedNode.name}}</div>
+                                        <div class="card-body">
+                                            <div class="row" style="margin-bottom: 10px">
+                                                <div class="col" style="text-align: center">
+                                                    <span class="global-score"
+                                                          :style="`
+                                                          border-color: ${graphViewerService.selectedNodeScore().color};
+                                                          color: ${graphViewerService.selectedNodeScore().color};`">
+                                                            {{graphViewerService.selectedNodeScore().scoreStr}}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span class="text-muted">POP </span>
-                                                {{graphViewerService.selectedNodePop()}}
-                                            </div>
-                                            <div>
-                                                <span class="text-muted">CAP </span>
-                                                {{graphViewerService.selectedNode.capital}}
-                                            </div>
-                                        </div>
+                                            <div class="row align-items-center">
+        <!--                                        key, pop, cap-->
+                                                <div class="col">
+                                                    <div>
+                                                        <span class="text-muted">KEY </span>
+                                                        {{graphViewerService.selectedNode.key}}
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-muted">POP </span>
+                                                        {{graphViewerService.selectedNodePop()}}
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-muted">CAP </span>
+                                                        {{graphViewerService.selectedNode.capital}}
+                                                    </div>
+                                                </div>
 
-<!--                                        coo, cur, lan-->
-                                        <div class="col">
-                                            <div>
-                                                <span class="text-muted">COO </span>
-                                                <a :href="`https://www.google.com/maps/place/${graphViewerService.selectedNodeCoordinates()}`"
-                                                   target="_blank" >{{graphViewerService.selectedNodeCoordinates()}}</a>
-                                            </div>
-                                            <div>
-                                                <span class="text-muted">CUR </span>
-                                                <span v-for="c in graphViewerService.selectedNode.currencies" :key="c"
-                                                      class="badge badge-secondary" style="margin: 3px">{{c}}</span>
-                                            </div>
-                                            <div>
-                                                <span class="text-muted">LAN </span>
-                                                <span v-for="c in graphViewerService.selectedNode.languages" :key="c"
-                                                      class="badge badge-primary" style="margin: 3px">{{c}}</span>
+        <!--                                        coo, cur, lan-->
+                                                <div class="col">
+                                                    <div>
+                                                        <span class="text-muted">COO </span>
+                                                        <a :href="`https://www.google.com/maps/place/${graphViewerService.selectedNodeCoordinates()}`"
+                                                           target="_blank" >{{graphViewerService.selectedNodeCoordinates()}}</a>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-muted">CUR </span>
+                                                        <span v-for="c in graphViewerService.selectedNode.currencies" :key="c"
+                                                              class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-muted">LAN </span>
+                                                        <span v-for="c in graphViewerService.selectedNode.languages" :key="c"
+                                                              class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div v-if="graphViewerService.selectedNode != null" class="col">
+                                    <div v-for="o in graphViewerService.selectedOrganisations" :key="o.key"
+                                         class="row align-items-center" style="margin: 15px">
+                                        <div class="col-">
+                                            <a :href="o.documentation" target="_blank">
+                                                <img :src="o.logo" style="width: 100px">
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            {{o.name}}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div v-else>Click on a country to see details</div>
+                                <div v-if="graphViewerService.selectedNode == null">Click on a country to see details</div>
                             </div>
                         </div>
                     </div>
