@@ -30,11 +30,14 @@
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                                    <label for="danger" class="btn btn-outline-primary active" v-on:click="setTabGraphViewer()">
-                                        <input type="radio" name="filter" id="danger" autocomplete="off" > Graph Viewer
+                                    <label for="graph-viewer" class="btn btn-outline-primary active" v-on:click="setTabGraphViewer()">
+                                        <input type="radio" name="filter" id="graph-viewer" autocomplete="off" > Graph Viewer
                                     </label>
-                                    <label for="recovery" class="btn btn-outline-primary" v-on:click="setTabRelationDetailsViewer()">
-                                        <input type="radio" name="filter" id="recovery" autocomplete="off" > Relation Details
+                                    <label for="relation-detail" class="btn btn-outline-primary" v-on:click="setTabRelationDetailsViewer()">
+                                        <input type="radio" name="filter" id="relation-detail" autocomplete="off" > Relation Details
+                                    </label>
+                                    <label for="relation-pending" class="btn btn-outline-primary" v-on:click="setTabRelationPendingViewer()">
+                                        <input type="radio" name="filter" id="relation-pending" autocomplete="off" > Relation Pending
                                     </label>
                                 </div>
                             </div>
@@ -308,6 +311,95 @@
                         </div>
 
                     </div>
+
+<!--                    relation pending content-->
+                    <div v-if="tab === tabValues.relationPendingViewer" class="row">
+<!--                        pending list-->
+                        <div class="col">
+                            <div>
+                                <div v-for="r in relationPendingService.relationshipPendingList" :key="r.key" class="card" style="margin: 10px">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col"><a class="btn btn-outline-primary" :href="r.article_link" target="_blank">article</a></div>
+                                            <div class="col-5">
+                                                {{r.tweet_text}}
+                                            </div>
+                                            <div class="col">
+                                                <span class="badge badge-primary" v-for="h in r.hashtags" :key="h" style="margin: 5px">
+                                                    {{h}}
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-success" @click="setSelectedRelationPending(r)">Confirm</button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-outline-danger">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-header text-muted">Confirm addition</div>
+                                <div class="card-body">
+                                    <div v-if="relationPendingService.relationshipPendingSelected !== null">
+                                        <label for="subjectInput" class="sr-only">Subject</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Subject</div>
+                                            </div>
+                                            <input v-model="relInput.subject" type="text" class="form-control custom-input" id="subjectInput" placeholder="Enter a subject" required>
+                                        </div>
+
+                                        <label for="briefInput" class="sr-only">Brief</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Brief</div>
+                                            </div>
+                                            <textarea v-model="relInput.brief" class="form-control custom-input" id="briefInput" placeholder="Enter a brief" required rows="5"></textarea>
+                                        </div>
+
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Link</div>
+                                            </div>
+                                            <a class="btn btn-outline-primary" :href="relInput.articleLink" target="_blank">Read article</a>
+                                        </div>
+
+                                        <label for="sectorInput" class="sr-only">Sector</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Sector</div>
+                                            </div>
+                                            <input v-model="relInput.sector" type="text" class="form-control custom-input" id="sectorInput" placeholder="Enter a sector" required>
+                                        </div>
+
+                                        <label for="dateInput" class="sr-only">Date</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Date</div>
+                                            </div>
+                                            <input v-model="relInput.date" type="date" class="form-control custom-input" id="dateInput" placeholder="Enter a date" required>
+                                        </div>
+
+                                        <label for="impactInput" class="sr-only">Impact</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text custom-input-prepend card-prepend">Impact</div>
+                                            </div>
+                                            <input v-model="relInput.impact" type="range" min="-3" max="3" class="form-control custom-input" id="impactInput" placeholder="Enter an impact" required>
+                                        </div>
+
+                                    </div>
+                                    <div v-else>
+                                        No rel selected
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </fullscreen>
             </div>
     </div>
@@ -320,6 +412,7 @@
     import graphViewer from "@/service/apis/graphViewer";
     import relationDetails from "@/service/apis/relationDetails";
     import LoggerService from "@/models/logger";
+    import relationPending from "@/service/apis/relationPending";
 
     const config = require('@/assets/config.json');
     const apiService = require('@/service/apiService').default;
@@ -347,6 +440,7 @@
                 accessToken: null,
                 graphViewerService: null,
                 relationDetailsService: null,
+                relationPendingService: null,
 
                 // dom
                 fullscreen: false,
@@ -364,12 +458,23 @@
                 countryAInput: "FRA",
                 countryBInput: "USA",
 
+                relInput: {
+                    subject: "",
+                    brief: "",
+                    articleLink: "",
+                    sector: "",
+                    date: "",
+                    impact: ""
+                },
+
+
                 graphRaw: null,
                 graphData: null,
 
                 tabValues: {
                     graphViewer: 'graphViewer',
                     relationDetailsViewer: 'relationDetailsViewer',
+                    relationPendingViewer: 'relationPendingViewer'
                 },
                 tab: 'graphViewer'
 
@@ -387,16 +492,16 @@
                             self.accessToken = data.Content.AccessToken;
                             const hostname = data.Content.Api.Hostname;
 
-                            self.graphViewerService = new graphViewer({
-                                "X-Access-Token": self.accessToken
-                            }, hostname);
+                            let headers = {"X-Access-Token": self.accessToken};
 
-                            self.relationDetailsService = new relationDetails({
-                                "X-Access-Token": self.accessToken
-                            }, hostname);
+                            self.graphViewerService = new graphViewer(headers, hostname);
+
+                            self.relationDetailsService = new relationDetails(headers, hostname);
+
+                            self.relationPendingService = new relationPending(headers, hostname);
 
                             // fixme - testing only
-                            self.setTabGraphViewer();
+                            self.setTabRelationPendingViewer();
                         } else {
                             self.subscribed = false;
                         }
@@ -427,6 +532,7 @@
                         self.isLoading = false;
                     })
             },
+
             loadRelationships() {
                 let self = this;
                 self.isLoading = true;
@@ -542,6 +648,10 @@
                     })
             },
 
+            loadRelationshipPending() {
+                this.relationPendingService.getAllRelationPending()
+            },
+
             getCountryA() {
                 return this.relationDetailsService.countryA;
             },
@@ -550,6 +660,14 @@
             },
             getEdgeHistoryDataset() {
                 return this.relationDetailsService.edgeHistoryDataset;
+            },
+            setSelectedRelationPending(r) {
+                this.relationPendingService.relationshipPendingSelected = r;
+                this.relInput.articleLink = r.article_link;
+                this.relInput.brief = r.tweet_text;
+
+                let d = new Date(r.date);
+                this.relInput.date = d.toISOString().split("T")[0]
             },
 
             toggleFullScreen () {
@@ -574,6 +692,13 @@
 
                 // fixme
                 this.loadRelationshipDetails();
+            },
+            setTabRelationPendingViewer() {
+                this.tab = this.tabValues.relationPendingViewer;
+                this.graphViewerService.clearGraph();
+
+                // fixme ?
+                this.loadRelationshipPending();
             }
         }
     }
@@ -593,6 +718,11 @@
 
     .fullscreen-toggle:hover {
         filter: brightness(50%);
+    }
+
+    .card-placeholder {
+        padding: 10px;
+        width: 30%;
     }
 
     .reload {
@@ -618,5 +748,11 @@
     .custom-input {
         background-color: black;
         color: white;
+    }
+
+    .card-prepend {
+        background-color: black;
+        width: 100px;
+        border: solid 1px white;
     }
 </style>
