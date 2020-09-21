@@ -316,7 +316,7 @@
                     <div v-if="tab === tabValues.relationPendingViewer" class="row">
 <!--                        pending list-->
                         <div class="col">
-                            <div>
+                            <div v-if="relationPendingService.relationshipPendingList.length > 0">
                                 <div v-for="r in relationPendingService.relationshipPendingList" :key="r.key" class="card" style="margin: 10px">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -333,18 +333,44 @@
                                                 <button class="btn btn-outline-success" @click="setSelectedRelationPending(r)">Confirm</button>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-outline-danger">Cancel</button>
+                                                <button class="btn btn-outline-danger" @click="deleteRelationshipPending(r)">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div v-else>
+                                <span class="text-muted">No pending relationship to process</span>
+                            </div>
                         </div>
                         <div class="col-4">
+<!--                            selected pending rel-->
                             <div class="card">
                                 <div class="card-header text-muted">Confirm addition</div>
                                 <div class="card-body">
                                     <div v-if="relationPendingService.relationshipPendingSelected !== null">
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="fromInput" class="sr-only">From</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text custom-input-prepend card-prepend">From</div>
+                                                    </div>
+                                                    <input v-model="fromInput" type="text" class="form-control custom-input" id="fromInput" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="toInput" class="sr-only">To</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text custom-input-prepend card-prepend">To</div>
+                                                    </div>
+                                                    <input v-model="toInput" type="text" class="form-control custom-input" id="toInput" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <label for="subjectInput" class="sr-only">Subject</label>
                                         <div class="input-group mb-2">
                                             <div class="input-group-prepend">
@@ -362,10 +388,7 @@
                                         </div>
 
                                         <div class="input-group mb-2">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text custom-input-prepend card-prepend">Link</div>
-                                            </div>
-                                            <a class="btn btn-outline-primary" :href="relInput.articleLink" target="_blank">Read article</a>
+                                            <a class="btn btn-outline-primary" style="width: 100%" :href="relInput.articleLink" target="_blank">Read article</a>
                                         </div>
 
                                         <label for="sectorInput" class="sr-only">Sector</label>
@@ -390,6 +413,10 @@
                                                 <div class="input-group-text custom-input-prepend card-prepend">Impact</div>
                                             </div>
                                             <input v-model="relInput.impact" type="range" min="-3" max="3" class="form-control custom-input" id="impactInput" placeholder="Enter an impact" required>
+                                        </div>
+
+                                        <div class="input-group mb-2">
+                                            <button class="btn btn-outline-success" style="width: 100%" @click="createRelationship">Submit</button>
                                         </div>
 
                                     </div>
@@ -458,6 +485,8 @@
                 countryAInput: "FRA",
                 countryBInput: "USA",
 
+                fromInput: "",
+                toInput: "",
                 relInput: {
                     subject: "",
                     brief: "",
@@ -650,6 +679,27 @@
 
             loadRelationshipPending() {
                 this.relationPendingService.getAllRelationPending()
+            },
+
+            createRelationship() {
+                let self = this;
+                this.relationPendingService.createRelationship(this.relInput,
+                    this.fromInput, this.toInput)
+                    .then(function() {
+                        return self.deleteRelationshipPending(self.relationPendingService.relationshipPendingSelected)
+                    })
+                    .then(function() {
+                        self.loadRelationshipPending();
+                        self.relationPendingService.relationshipPendingSelected = null;
+                    })
+            },
+
+            deleteRelationshipPending(r) {
+                let self = this;
+                this.relationPendingService.deleteRelationshipPending(r.key)
+                    .then(function() {
+                        self.loadRelationshipPending();
+                    })
             },
 
             getCountryA() {
