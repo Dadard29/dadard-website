@@ -18,6 +18,8 @@ let COLORS = [
     chartColors.yellow,
     chartColors.green,
     chartColors.blue,
+    chartColors.purple,
+    chartColors.grey,
 ];
 
 export default class relationDetails {

@@ -669,6 +669,19 @@
             loadCountriesDetails() {
                 let self = this;
                 self.isLoading = true;
+
+                if (self.countryScoreChart !== null) {
+                    self.countryScoreChart.destroy();
+                }
+
+                if (self.countrySectorChart !==  null) {
+                    self.countrySectorChart.destroy();
+                }
+
+                if (self.countryInitChart !== null) {
+                    self.countryInitChart.destroy();
+                }
+
                 this.countryDetailsService.getCountriesDetails(this.countryInput)
                     .then(function() {
 

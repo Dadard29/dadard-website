@@ -19,6 +19,8 @@ let COLORS = [
     chartColors.yellow,
     chartColors.green,
     chartColors.blue,
+    chartColors.purple,
+    chartColors.grey,
 ];
 
 export default class countryDetails {
@@ -36,6 +38,32 @@ export default class countryDetails {
         this.relationships = [];
         this.organisations = [];
         this.relationListDataset = null;
+    }
+
+    getCountriesDetails(countryKey) {
+        let self = this;
+
+        return this.service.get(this.routes.countriesDetails, {
+            params: {
+                country: countryKey
+            }
+        })
+            .then(function(response) {
+                let c = response.data.Content;
+                self.country = c.country;
+                self.relationships = c.relationships;
+
+                self.setRelationListDataset();
+
+                return c
+            })
+            .catch(function(error) {
+                if (error.response) {
+                    throw error.response.data.Message
+                } else {
+                    throw error
+                }
+            })
     }
 
     getInitDataset() {
@@ -151,32 +179,6 @@ export default class countryDetails {
             }],
             labels: labels,
         }
-    }
-
-    getCountriesDetails(countryKey) {
-        let self = this;
-
-        return this.service.get(this.routes.countriesDetails, {
-            params: {
-                country: countryKey
-            }
-        })
-            .then(function(response) {
-                let c = response.data.Content;
-                self.country = c.country;
-                self.relationships = c.relationships;
-
-                self.setRelationListDataset();
-
-                return c
-            })
-            .catch(function(error) {
-                if (error.response) {
-                    throw error.response.data.Message
-                } else {
-                    throw error
-                }
-            })
     }
 
     setRelationListDataset() {
