@@ -210,9 +210,8 @@ export default class relationDetails {
         let data = [];
         let labels = [];
         edgesHist.forEach(function(e) {
-            let date = moment(e.date).toDate(); //.toLocaleDateString().slice(0, 4);
+            let date = moment(e.date).toDate();
             let dateString = moment(e.date).format(timeFormat);
-            // let dateString = `${date.getDay()}/${date.getMonth()}`;
 
             sum += e.impact;
             data.push({

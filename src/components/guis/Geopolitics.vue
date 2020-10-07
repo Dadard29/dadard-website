@@ -26,12 +26,15 @@
                             </div>
                         </div>
 
-<!--                        switch mode (graph viewer / rel viewer)-->
+<!--                        switch mode (graph viewer / rel viewer...)-->
                         <div class="col-auto">
                             <div class="input-group input-group-sm">
                                 <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
                                     <label for="graph-viewer" class="btn btn-outline-primary active" v-on:click="setTabGraphViewer()">
                                         <input type="radio" name="filter" id="graph-viewer" autocomplete="off" > Graph Viewer
+                                    </label>
+                                    <label for="country-detail" class="btn btn-outline-primary" v-on:click="setTabCountryDetailsViewer()">
+                                        <input type="radio" name="filter" id="country-detail" autocomplete="off" > Country Details
                                     </label>
                                     <label for="relation-detail" class="btn btn-outline-primary" v-on:click="setTabRelationDetailsViewer()">
                                         <input type="radio" name="filter" id="relation-detail" autocomplete="off" > Relation Details
@@ -39,19 +42,6 @@
                                     <label for="relation-pending" class="btn btn-outline-primary" v-on:click="setTabRelationPendingViewer()">
                                         <input type="radio" name="filter" id="relation-pending" autocomplete="off" > Relation Pending
                                     </label>
-                                </div>
-                            </div>
-                        </div>
-
-<!--                        load rels from country-->
-                        <div class="col-md-2" v-if="tab === tabValues.graphViewer">
-                            <div class="input-group input-group-sm">
-                                <input v-model="countryInput" class="form-control custom-input">
-                                <div class="input-group-append">
-                                    <button @click="loadRelationships" type="button"
-                                            class="btn btn-outline-primary" :disabled="isLoading">
-                                        Load country rels
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -77,6 +67,20 @@
                             </div>
                         </div>
 
+<!--                        load rels from country-->
+                        <div class="col-md-2" v-if="tab === tabValues.countryDetailsViewer">
+                            <div class="input-group input-group-sm">
+                                <input v-model="countryInput" class="form-control custom-input">
+                                <div class="input-group-append">
+                                    <button @click="loadCountriesDetails" type="button"
+                                            class="btn btn-outline-primary" :disabled="isLoading">
+                                        Load country details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        load rels details-->
                         <div class="col-md-2" v-if="tab === tabValues.relationDetailsViewer">
                             <div class="input-group input-group-sm">
                                 <input v-model="countryAInput" class="form-control custom-input">
@@ -188,6 +192,94 @@
                                     </div>
                                 </div>
                                 <div v-if="graphViewerService.selectedNode == null">Click on a country to see details</div>
+                            </div>
+                        </div>
+                    </div>
+
+<!--                    country details content-->
+                    <div v-if="tab === tabValues.countryDetailsViewer" class="row" style="width: 100%">
+                        <div v-if="countryDetailsService.country !== null" class="row">
+<!--                            country details-->
+                            <div class="col-2">
+                                <div class="row">
+
+                                    <div class="card">
+                                            <img :src="countryDetailsService.country.flag" class="card-img-top">
+                                            <div class="card-header">{{countryDetailsService.country.name}}</div>
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <!--                                        key, pop, cap-->
+                                                    <div class="col">
+                                                        <div>
+                                                            <span class="text-muted">KEY </span>
+                                                            {{countryDetailsService.country.key}}
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-muted">POP </span>
+                                                            {{countryDetailsService.countryPop()}}
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-muted">CAP </span>
+                                                            {{countryDetailsService.country.capital}}
+                                                        </div>
+                                                    </div>
+
+                                                    <!--                                        coo, cur, lan-->
+                                                    <div class="col">
+                                                        <div>
+                                                            <span class="text-muted">COO </span>
+                                                            <a :href="`https://www.google.com/maps/place/${countryDetailsService.countryCoordinates()}`"
+                                                               target="_blank" >{{countryDetailsService.countryCoordinates()}}</a>
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-muted">CUR </span>
+                                                            <span v-for="c in countryDetailsService.country.currencies" :key="c"
+                                                                  class="badge badge-secondary" style="margin: 3px">{{c}}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-muted">LAN </span>
+                                                            <span v-for="c in countryDetailsService.country.languages" :key="c"
+                                                                  class="badge badge-primary" style="margin: 3px">{{c}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div v-for="o in countryDetailsService.organisations" :key="o.key"
+                                         class="row align-items-center" style="margin: 15px">
+                                        <a :href="o.documentation" target="_blank">
+                                            <img :src="o.logo" style="width: 100px">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+<!--                            rels history-->
+                            <div class="col">
+                                <div class="row justify-content-md-center">
+                                    <div class="col-3">
+                                        <canvas id="countrySectorsChart" width="200px" height="200px"></canvas>
+                                    </div>
+                                    <div class="col-3">
+                                        <canvas id="countryScoreEvolutionChart" width="200px" height="200px"></canvas>
+                                    </div>
+                                    <div class="col-3">
+                                        <canvas id="countryInitChart" width="200px" height="200px"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <Grid v-if="getRelationListDataset() != null"
+                                          :cols="getRelationListDataset().cols"
+                                          :rows="getRelationListDataset().rows"
+                                          :styles="getRelationListDataset().styles"
+                                          :sort="true"
+                                          :pagination="true"
+                                          :fixedHeader="true"
+                                          :search="true"
+                                          :auto-width="true"
+                                    ></Grid>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -440,6 +532,7 @@
     import relationDetails from "@/service/apis/relationDetails";
     import LoggerService from "@/models/logger";
     import relationPending from "@/service/apis/relationPending";
+    import countryDetails from "@/service/apis/countryDetails";
 
     const config = require('@/assets/config.json');
     const apiService = require('@/service/apiService').default;
@@ -468,14 +561,22 @@
                 graphViewerService: null,
                 relationDetailsService: null,
                 relationPendingService: null,
+                countryDetailsService: null,
 
                 // dom
                 fullscreen: false,
                 isLoading: false,
 
+                // charts
+                // relations details
                 sectorChart: null,
                 scoreChart: null,
                 initChart: null,
+
+                // country details
+                countrySectorChart: null,
+                countryScoreChart: null,
+                countryInitChart: null,
 
                 perf: 0,
 
@@ -502,6 +603,7 @@
 
                 tabValues: {
                     graphViewer: 'graphViewer',
+                    countryDetailsViewer: 'countryDetailsViewer',
                     relationDetailsViewer: 'relationDetailsViewer',
                     relationPendingViewer: 'relationPendingViewer'
                 },
@@ -529,8 +631,10 @@
 
                             self.relationPendingService = new relationPending(headers, hostname);
 
-                            // fixme - testing only
-                            self.setTabRelationPendingViewer();
+                            self.countryDetailsService = new countryDetails(headers, hostname);
+
+                                // fixme - testing only
+                            self.setTabCountryDetailsViewer()
                         } else {
                             self.subscribed = false;
                         }
@@ -562,22 +666,92 @@
                     })
             },
 
-            loadRelationships() {
+            loadCountriesDetails() {
                 let self = this;
                 self.isLoading = true;
+                this.countryDetailsService.getCountriesDetails(this.countryInput)
+                    .then(function() {
 
-                this.graphViewerService.getRelationships(this.countryInput)
-                    .then(function(results) {
-                        self.graphRaw = results;
-                        self.graphData = self.graphViewerService.processGraphRaw(self.graphRaw);
-                        self.graphViewerService.renderGraph(self.graphData, null);
+                        // update orgs array with graphViewerService
+                        self.countryDetailsService.organisations = [];
+                        for (let o of self.countryDetailsService.country.organisation_keys) {
+                            self.graphViewerService.getOrganisation(o)
+                                .then(function(org) {
+                                    self.countryDetailsService.organisations.push(org)
+                                })
+                        }
+
+                        // load charts
+                        let sectorCtx = document.getElementById('countrySectorsChart').getContext('2d');
+                        let sectorDataset = self.countryDetailsService.getSectorRepartitionDataset();
+                        self.countrySectorChart = new Chart(sectorCtx, {
+                            type: 'doughnut',
+                            data: sectorDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Sector repartition'
+                                },
+                                responsive: true,
+                                circumference: Math.PI,
+                                rotation: -Math.PI
+                            }
+                        });
+
+                        let scoreCtx = document.getElementById('countryScoreEvolutionChart').getContext('2d');
+                        let timeFormat = 'DD/MM/YYYY HH:mm';
+                        let scoreDataset = self.countryDetailsService.getImpactHistoryDataset(timeFormat);
+                        self.countryScoreChart = new Chart(scoreCtx, {
+                            type: 'line',
+                            data: scoreDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Score evolution'
+                                },
+                                responsive: true,
+                                scales: {
+                                    xAxes: [{
+                                        type: 'time',
+                                        time: {
+                                            parser: timeFormat,
+                                            round: 'day',
+                                            tooltipFormat: 'll HH:mm'
+                                        },
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Date'
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'value'
+                                        }
+                                    }]
+                                },
+                            }
+                        });
+
+                        let initCtx = document.getElementById('countryInitChart').getContext('2d');
+                        let initDataset = self.countryDetailsService.getInitDataset();
+                        self.countryInitChart = new Chart(initCtx, {
+                            type: 'doughnut',
+                            data: initDataset,
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Initiation repartition'
+                                },
+                                responsive: true,
+                                circumference: Math.PI,
+                                rotation: -Math.PI
+                            }
+                        });
 
                         self.isLoading = false;
                     })
-                    .catch(function(error) {
-                        self.logger.error(error);
-                        self.isLoading = false;
-                    })
+
             },
 
             loadRelationshipDetails() {
@@ -702,6 +876,7 @@
                     })
             },
 
+
             getCountryA() {
                 return this.relationDetailsService.countryA;
             },
@@ -710,6 +885,9 @@
             },
             getEdgeHistoryDataset() {
                 return this.relationDetailsService.edgeHistoryDataset;
+            },
+            getRelationListDataset() {
+                return this.countryDetailsService.relationListDataset;
             },
             setSelectedRelationPending(r) {
                 this.relationPendingService.relationshipPendingSelected = r;
@@ -735,6 +913,13 @@
 
                 // fixme
                 this.loadAllCountries();
+            },
+            setTabCountryDetailsViewer() {
+                this.tab = this.tabValues.countryDetailsViewer;
+                this.graphViewerService.clearGraph();
+
+                // fixme
+                this.loadCountriesDetails()
             },
             setTabRelationDetailsViewer() {
                 this.tab = this.tabValues.relationDetailsViewer;

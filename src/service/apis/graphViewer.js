@@ -71,6 +71,8 @@ export default class graphViewer {
         this.selectedNode = null;
         this.selectedOrganisations = null;
         this.selectedEdges = [];
+
+        this.countryDetails = null;
     }
 
     selectedNodeScore() {
@@ -139,24 +141,6 @@ export default class graphViewer {
         }
 
         return `${latS} ${longS}`
-    }
-
-    getRelationships(country) {
-        return this.service.get(this.routes.relationships, {
-            params: {
-                country: country,
-            }
-        })
-            .then(function(response) {
-                return response.data.Content
-            })
-            .catch(function(error) {
-                if (error.response) {
-                    throw error.response.data.Message
-                } else {
-                    throw error
-                }
-            })
     }
 
     getAllCountries(region) {
