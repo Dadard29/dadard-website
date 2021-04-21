@@ -14,6 +14,7 @@ import Thoughts from "@/components/guis/Thoughts";
 import HomeConnected from "@/components/home/HomeConnected";
 import Geopolitics from "@/components/guis/Geopolitics";
 import { GridGlobal } from 'gridjs-vue'
+import Dota from "@/components/guis/dota/Dota";
 
 Vue.config.productionTip = false;
 
@@ -29,6 +30,7 @@ const routes = [
   {path: "/apis/youtube-download", component: YoutubeDownload},
   {path: "/apis/music-researcher", component: MusicResearcher},
   {path: "/apis/geopolitics", component: Geopolitics},
+  {path: "/apis/dota", component: Dota},
   {path: "/about", component: About},
   {path: "/pensées", component: Thoughts},
   {path: "/dashboard", component: Dashboard},

@@ -28,6 +28,9 @@
                     <router-link to="/apis/geopolitics" class="dropdown-item">
                         Geopolitics
                     </router-link>
+                    <router-link to="/apis/dota" class="dropdown-item">
+                      Dota 2 dashboard
+                    </router-link>
                 </div>
             </div>
             <router-link to="/about" class="nav-item nav-link" exact-active-class="active">
